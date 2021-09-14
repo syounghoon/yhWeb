@@ -158,6 +158,8 @@
 						</thead>
 						
 						<tbody>
+							<c:set var='userid' value='${criG.userid}' />
+							<c:set var='sessionUserid' value='${__LOGIN__.userId}' />
 							<c:forEach items="${guestbook}" var="guestbook">							
 								<form action="/mypage/deleteGuestbook" method="POST" id='form_${guestbook.gno}'>
 									<input type='hidden' name='gno' value='${guestbook.gno}'>
@@ -165,10 +167,11 @@
 									<input type='hidden' name='currPage' value='${pageMaker.criG.currPage}'>
 									<input type='hidden' name='amount' value='${pageMaker.criG.amount}'>
 									<input type='hidden' name='pagesPerPage' value='${pageMaker.criG.pagesPerPage}'>
-								<tr>
+								<tr>									
 									<td>${guestbook.content}</td>								
-									<td><a class='guestbook_a' href='/mypage/main?userid=${guestbook.writer}'>${guestbook.nickname}</a></td>
-	                                <td><button onclick="deleteGuestbook('${guestbook.gno}')" type="button" class="btn btn-outline-danger btn-sm">Del</button></td>								
+									<td><a class='guestbook_a' href='/mypage/main?userid=${guestbook.writer}'>${guestbook.nickname}</a></td>							  
+	                                <td><button onclick="deleteGuestbook('${guestbook.gno}')" type="button" class="btn btn-outline-danger btn-sm" style="${sessionUserid eq userid ? 'display:inline' : 'display:none'}">Del</button></td>						
+
 								</tr>
 								</form>                            
                             </c:forEach>			

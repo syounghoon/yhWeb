@@ -1,11 +1,25 @@
 package com.filmee.myapp.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.filmee.myapp.domain.ActivityVO;
 import com.filmee.myapp.domain.CriteriaActivity;
 import com.filmee.myapp.domain.CriteriaFilm;
@@ -346,6 +360,74 @@ public class MypageServiceImpl
 		
 		return this.mapper.isFollowed(follower, followee);
 	} //isFollowed
+	
+	@Override
+	public boolean updateUserProfilePhoto(MultipartFile file, String profileText, CriteriaMain cri) throws IllegalStateException, IOException {		
+		log.debug("updateUserProfilePhoto({}, {}, {}) invoked.", file, profileText, cri);
+		
+		Objects.requireNonNull(this.mapper);
+		
+		String uploadPath = "";
+        
+        String path = "C:/awsTemp/"; // 파일 업로드 경로
+            
+        String original = file.getOriginalFilename(); // 업로드하는 파일 name 
+        uploadPath = path+original; // 파일 업로드 경로 + 파일 이름
+        
+        try {
+            file.transferTo(new File(uploadPath)); // 파일을 위에 지정 경로로 업로드
+        } catch (IllegalStateException e) {
+            
+            e.printStackTrace();
+        } catch (IOException e) {
+            
+            e.printStackTrace();
+        } //try-catch
+		
+		Regions clientRegion = Regions.AP_NORTHEAST_2;
+        String bucketName = "younghoon";
+        //String stringObjKeyName = "123";			//올린파일설명제목
+        String fileName = uploadPath; 	//올릴파일 경로
+        String fileNameExtension=FilenameUtils.getExtension(fileName).toLowerCase();
+        String destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + fileNameExtension;
+        String fileObjKeyName = destinationFileName;				//클라우드에 올라가는 파일 이름
+        
+        try {
+
+            AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+                    .withRegion(clientRegion)
+                    .build();    
+          
+            PutObjectRequest request = new PutObjectRequest(bucketName, fileObjKeyName, new File(fileName));
+            ObjectMetadata metadata = new ObjectMetadata();
+            
+            metadata.setContentType(metadata.getContentType());
+            metadata.addUserMetadata("title", "someTitle");
+            request.setMetadata(metadata);
+            s3Client.putObject(new PutObjectRequest(bucketName, fileObjKeyName, new File(fileName)));
+            
+        } catch (AmazonServiceException e) {
+         
+            e.printStackTrace();
+        } catch (SdkClientException e) {
+            
+            e.printStackTrace();
+        } finally {
+        	if(uploadPath != null) {
+        		File fileLocal = new File(uploadPath);
+        		fileLocal.delete();
+        	} //if
+        } //try-catch-finally
+		
+		if(this.mapper.updateUserProfilePhoto(destinationFileName, profileText, cri.getUserid()) == 1) {
+			
+			return true;
+		} else {
+			
+			return false;
+		} //if-else
+		
+	} //updateUserProfilePhoto
 	
 
 } //end class

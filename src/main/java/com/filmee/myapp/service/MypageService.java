@@ -1,8 +1,11 @@
 package com.filmee.myapp.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.filmee.myapp.domain.ActivityVO;
 import com.filmee.myapp.domain.CriteriaActivity;
@@ -94,5 +97,9 @@ public interface MypageService {
 	public abstract int getTotalCountLikedReviews(CriteriaReview criR);
 	
 	public abstract int getTotalCountActivity(CriteriaActivity criA);
+	
+	//------------------------------------------------------------------------------------//
+	
+	public abstract boolean updateUserProfilePhoto(MultipartFile file, String profileText, CriteriaMain cri) throws IllegalStateException, IOException;
 
 } //end interface

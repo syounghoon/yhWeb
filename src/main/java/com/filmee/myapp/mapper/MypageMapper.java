@@ -94,5 +94,9 @@ public interface MypageMapper {
 	public abstract int getTotalCountLikedReviews(CriteriaReview criR);
 	
 	public abstract int getTotalCountActivity(CriteriaActivity criA);
+	
+	//---------------------------------------------------------------------------------//
+	
+	public abstract int updateUserProfilePhoto(String fileName, String profileText, Integer userid);
 
 } //end interface

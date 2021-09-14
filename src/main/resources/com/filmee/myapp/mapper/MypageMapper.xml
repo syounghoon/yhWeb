@@ -384,4 +384,13 @@
 		]]>		
 	</select>
 	
+	<update id='updateUserProfilePhoto'>
+		<![CDATA[
+			UPDATE fm_user 
+			SET profile_photo_path = #{fileName},
+			profile_text = #{profileText}
+			WHERE user_id = #{userid}			
+		]]>	
+	</update>
+	
 </mapper>

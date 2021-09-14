@@ -327,6 +327,6 @@
         </div>
     </div>
 
-    <!-- <%@ include file="/resources/html/footer.jsp" %> -->
+    <!-- <%@ include file="/resources/html/footer.jsp" %>  -->
 </body>
 </html>

@@ -1,6 +1,8 @@
 package com.filmee.myapp.controller;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.filmee.myapp.domain.ActivityVO;
@@ -370,6 +374,23 @@ public class MypageController {
 		
 		return "redirect:/mypage/likedreviews";
 	} //deleteMyReview
+	
+	
+	@PostMapping(path = "registerUserProfile", consumes = {"multipart/form-data"})
+	public String registerUserProfile(@ModelAttribute("cri")CriteriaMain cri, @RequestParam("userid") Integer userid, @RequestParam("profileText") String profileText, @RequestPart MultipartFile file, RedirectAttributes rttrs)
+			throws IllegalStateException, IOException {
+		log.debug("registerUserProfile({}, {}, {}, {}) invoked.", file, userid, profileText, rttrs);
+		
+		boolean isUpdated = this.service.updateUserProfilePhoto(file, profileText, cri);
+		
+		if(isUpdated) {
+			rttrs.addFlashAttribute("result", "success");
+		} //if
+		
+		rttrs.addAttribute("userid", cri.getUserid());
+		
+		return "redirect:/mypage/main";
+	} //registerUserProfile
 	
 	
 	//forgotPw.jsp 혹은 xxxx.jsp(마이페이지)에 심어놓은 new-pw modal에서 submit 시
