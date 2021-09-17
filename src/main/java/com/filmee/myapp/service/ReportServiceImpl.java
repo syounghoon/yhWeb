@@ -39,20 +39,13 @@ public class ReportServiceImpl implements ReportService {
 		return this.mapper.getList(cri);
 	}//getList
 
-	@Override
-	public ReportVO getDetail(Integer rptno) {
-		log.debug(" SERVICE >> getDetail({}) invoked.", rptno);
-		Objects.requireNonNull(this.mapper);
-		
-		return this.mapper.select(rptno);
-	}//getDetail
 
 	@Override
-	public int complete(Integer rptno) {
+	public int complete(Integer rptno, Integer mgr_id) {
 		log.debug(" SERVICE >> complete({}) invoked.", rptno);
 		Objects.requireNonNull(this.mapper);
 		
-		return this.mapper.complete(rptno);
+		return this.mapper.complete(rptno,mgr_id);
 	}
 
 	@Override
@@ -61,6 +54,6 @@ public class ReportServiceImpl implements ReportService {
 		Objects.requireNonNull(this.mapper);
 
 		return this.mapper.getTotal(cri);
-	}//complete
+	}
 
 }

@@ -16,5 +16,8 @@ public class ComplaintVO {
 	private Timestamp complete_ts;
 	private	Integer mgr_id;
 	private Integer send;
+	private String content_re;
+	
+//	private String email;
 	
 }

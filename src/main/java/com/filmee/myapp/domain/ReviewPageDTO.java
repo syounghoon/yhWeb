@@ -1,5 +1,7 @@
 package com.filmee.myapp.domain;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.ToString;
 
@@ -20,6 +22,15 @@ public class ReviewPageDTO {
 	
 	private boolean prev;		// 이전 페이지로의 이동버튼의 생성여부
 	private boolean next;		// 다음 페이지로의 이동버튼의 생성여부
+	
+	
+	private int replyCnt;
+	private List<ReviewCommentVO> list;
+	
+	public ReviewPageDTO(int replyCnt, List<ReviewCommentVO> list) {
+		this.replyCnt=replyCnt;
+		this.list=list;
+	}
 	
 	
 	public ReviewPageDTO(CriteriaFilmReview cri, int totalAmount) {

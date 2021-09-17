@@ -100,6 +100,9 @@ public interface MypageService {
 	
 	//------------------------------------------------------------------------------------//
 	
-	public abstract boolean updateUserProfilePhoto(MultipartFile file, String profileText, CriteriaMain cri) throws IllegalStateException, IOException;
+	public abstract boolean updateUserProfilePhoto(MultipartFile file, String profileText, String nickname, CriteriaMain cri) 
+			throws IllegalStateException, IOException;
+	
+	public abstract boolean updateUserProfile(String profileText, String nickname, CriteriaMain cri);
 
 } //end interface

@@ -14,5 +14,7 @@ public interface JoinMapper {
 	
 	public abstract int updateAuthCodeAuthorized(String email, String authCode)throws Exception;
 	
+	public abstract int updateUserAsDeleted(Integer userId) throws Exception;
+	
 	
 }//end interface

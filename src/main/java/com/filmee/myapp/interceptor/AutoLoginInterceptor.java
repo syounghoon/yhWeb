@@ -37,31 +37,31 @@ public class AutoLoginInterceptor implements HandlerInterceptor {
 			
 			//RememberMe 쿠키 획득
 			Cookie rememberMeCookie = 
-					WebUtils.getCookie(request, LoginInterceptor.rememberMeKey);
+					WebUtils.getCookie(request, MainController.rememberMeKey);
 			
 			if(rememberMeCookie != null) {	//RememberMe 쿠키가 있으면
 				String rememberMe = rememberMeCookie.getValue();
 				
-				//Session Scope에서 로그인 정보 획득
 				HttpSession session = request.getSession();
+				
+				//일치하는 쿠키값을 가진 유저를 검색
 				UserVO user = this.service.findUserWithCookie(rememberMe);
 				
-				if(user != null) {	//로그인 정보가 있다면
+				if(user != null) {	//쿠키 정보가 등록된 유저를 찾으면
 					//로그인 처리
 					session.setAttribute(MainController.loginKey, user);
 					log.info(">>>>> LoginKey on SessionScope. >>>>>");
 	
+					String sessionId = session.getId();		//현재 SessionId 획득
 					
-					String sessionId = session.getId();		//햔재 SessionId 획득
-					
-					this.service.setUserRememberMe(
+					this.service.setUserRememberMe(		//DB에 자동로그인 쿠키 정보 저장
 							user.getEmail(),
 							sessionId,
 							new Date(System.currentTimeMillis() + (1000*60*60*24*7))	//유효기간 7일
 							);
 									
 					rememberMeCookie = 
-							new Cookie(LoginInterceptor.rememberMeKey, sessionId);//같은 이름의 새로운 쿠키 생성
+							new Cookie(MainController.rememberMeKey, sessionId);//같은 이름의 새로운 쿠키 생성
 					
 					rememberMeCookie.setMaxAge(60*60*24*7);		//쿠키 유효기간 7일
 					rememberMeCookie.setPath("/");				//쿠키 경로 : 모든 경로
@@ -72,10 +72,8 @@ public class AutoLoginInterceptor implements HandlerInterceptor {
 				
 			}//if(rememberMeCookie != null) {
 			
-		}else {
-			log.info("not a first request");
-		}//if-else
-			
+		}//if(WebUtils.getCookie(request, "JSESSIONID") == null)
+		
 		return true;
 	}//preHandle
 	

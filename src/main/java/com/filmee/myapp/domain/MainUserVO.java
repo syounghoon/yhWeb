@@ -9,5 +9,6 @@ public class MainUserVO {
 	private Integer userid;
 	private String photo;
 	private String text;
+	private String nickname;
 
 } //end class

@@ -20,12 +20,6 @@
         OFFSET (#{currPage}-1) * #{amount} ROW
         FETCH NEXT #{amount} ROWS ONLY
     </select>
-
-    <select id="select" resultType="com.filmee.myapp.domain.ReportVO">
-        SELECT *
-        FROM fm_report
-        WHERE rptno=#{rptno}
-    </select>
     
     <select id="getTotal" resultType="int">
         SELECT count(rptno)
@@ -34,7 +28,7 @@
 
     <update id="complete">
         UPDATE fm_report
-        SET insert_ts=current_date, mgr_id=#{mgr_id}
+        SET complete_ts=current_date, mgr_id=#{mgr_id}
         WHERE rptno=#{rptno}
     </update>
     

@@ -9,8 +9,8 @@ import com.filmee.myapp.domain.CriteriaFilmReview;
 import com.filmee.myapp.domain.FilmGenreVO;
 import com.filmee.myapp.domain.FilmPeopleVO;
 import com.filmee.myapp.domain.FilmVO;
+import com.filmee.myapp.domain.ReviewDTO;
 import com.filmee.myapp.domain.ReviewFilmUserVO;
-import com.filmee.myapp.domain.ReviewVO;
 import com.filmee.myapp.mapper.FilmMapper;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +23,8 @@ import lombok.extern.log4j.Log4j2;
 public class FilmServiceImpl implements FilmService {
 
 	private FilmMapper mapper;
+
+
 
 	@Override
 	public FilmVO getFilmInfo(Integer film_id) {
@@ -54,7 +56,7 @@ public class FilmServiceImpl implements FilmService {
 	// ---------------------------------------------------------//
 
 	@Override
-	public int register(ReviewVO review) {
+	public int register(ReviewDTO review) {
 		log.debug("register({}) invoked.", review);
 
 		Objects.requireNonNull(this.mapper);
@@ -87,7 +89,7 @@ public class FilmServiceImpl implements FilmService {
 	} // remove
 
 	@Override
-	public int modify(ReviewVO review) {
+	public int modify(ReviewDTO review) {
 		log.debug("modify({}) invoked.", review);
 		
 		Objects.requireNonNull(this.mapper);
@@ -108,6 +110,73 @@ public class FilmServiceImpl implements FilmService {
 		
 		Objects.requireNonNull(this.mapper);
 		return this.mapper.selectTotalCount(film_id, cri);
-	} // getTotalCount
+	}
+
+	
+	// 리뷰 좋아요 
+	@Override
+	public int likeInsert(ReviewFilmUserVO vo) {
+		log.info("-------------------------------------");
+		log.debug(">> likeInsert({})invoked.", vo);
+		Objects.requireNonNull(this.mapper);
+				
+		return this.mapper.likeInsert(vo);
+	}//likeinsert
+	
+	
+	@Override
+	public int likeCheck(Integer rno, Integer userid) {
+		log.info("-------------------------------------");
+		log.debug(">> likeCheck({},{})invoked.", rno,userid);
+		Objects.requireNonNull(this.mapper);
+		
+		this.mapper.likeCnt(rno, 1);
+		
+		return this.mapper.likeCheck(rno, userid);
+	}//likeCheck
+	
+	@Override
+	public void likeCheckTotal(Integer rno) {
+		log.info("-------------------------------------");
+		log.debug(">> likeCheckTotal({})invoked.", rno);
+		
+		Objects.requireNonNull(this.mapper);
+		
+		this.mapper.likeCheckTotal(rno);
+	
+	}//likeCheckTotal
+	
+	@Override
+	public int likeUncheck(Integer rno, Integer userid) {
+		log.info("-------------------------------------");
+		log.debug(">> likeUncheck({},{})invoked.", rno,userid);
+		Objects.requireNonNull(this.mapper);
+		
+		this.mapper.likeCnt(rno, -1);
+		
+		return this.mapper.likeUncheck(rno, userid);
+	}//likeUncheck
+	
+	
+	@Override
+	public ReviewFilmUserVO check(Integer rno, Integer userid) {
+		log.info("-------------------------------------");
+		log.debug(">> check({},{})invoked.", rno,userid);
+		Objects.requireNonNull(this.mapper);
+		
+		return this.mapper.check(rno, userid);
+	}
+
+
+	@Override
+	public int likeCnt(Integer rno) {
+		log.info("-------------------------------------");
+		log.debug(">> check({})invoked.", rno);
+				
+		return this.mapper.likeCnt(rno);
+
+	} // likeCnt
+
+
 
 } // end class

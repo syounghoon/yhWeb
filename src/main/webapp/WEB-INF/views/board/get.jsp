@@ -15,7 +15,6 @@
     <title>FILMEE | FILM MEETING</title>
     <link rel="icon" href="/resources/img/favicon_noback.ico" type="image/x-icon">
     <link rel="stylesheet" href="/resources/css/bootstrap.css">
-    <%@ include file="/resources/html/header.jsp" %>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -26,29 +25,22 @@
 
     <script>    
     	$(function(){
-
             console.log("========= COMMENT JS =======")
     		var bnoValue='<c:out value="${board.bno}"/>';
             var nickname='<c:out value="${__LOGIN__.nickname}"/>' 
             var userid='<c:out value="${__LOGIN__.userId}"/>'
             var replyUL=$(".chat");    
             var boardwriter='<c:out value="${board.writer}"/>'
-
             var modal = $(".modal"); 
-
             var modalInputReply=modal.find("input[name='content']");
             var modalInputReplyer=modal.find("input[name='nickname']");
             var modalinputReplyDate=modal.find("input[name='insert_ts']");
-
             var modalModBtn=$("#modalModBtn");
             var modalRemoveBtn=$("#modalRemoveBtn");
             var modalRegisterBtn=$("#modalRegisterBtn");
-
-
             console.log("nick:",nickname)
             console.log("userid:",userid);
             console.log("writer:",boardwriter);
-
             if("${__LOGIN__.userId}"==boardwriter){
                 $("#delete").show();
                 $("#modifyBtn").show();
@@ -61,8 +53,16 @@
                 }//if
             }//if-else
 
-            var likecheck="${heart.likecheck}"
+            //관리자일 경우 관리자 권한버튼 보임
+            var isAdmin='${__LOGIN__.isAdmin}'
+            console.log("isAdmin::"+isAdmin);
+            if(isAdmin==='T'){
+                $("#admindeleteBtn").show();
+            } else{
+                $("#admindeleteBtn").hide();
+            }
 
+            var likecheck="${heart.likecheck}"
             console.log(">>>> LIKECHECK >>>> ",likecheck); 
             if(likecheck==1){
                 $("#likeimg").attr("src", "/resources/img/fullheart.png");
@@ -87,11 +87,9 @@
                     
                     likecheck=1;
                     console.log(">>>>>>>like check", likecheck);
-
                     location.href="/board/get?bno=${board.bno}&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
                 })
             }
-
             showList(1);
             function showList(page){
                 console.log("showList ! : nick:",nickname)
@@ -103,13 +101,12 @@
                     }
                     var str="";
                     if(list==null||list.length==0){
-                        str+="<div>아직 댓글이 없습니다.</div>"
+                        str+="<div id='nocomment'>아직 댓글이 없습니다.</div>"
                         // return;
                     }//if
                     for(var i=0, len=list.length||0; i<len; i++){
-
                         str+="      <div class='header'>";
-                        str+="          <a href='/mypage/main?user="+list[i].writer+"'><img class='rounded-circle' src='/resources/img/common.jpg' width='30px' height='30px'></a>";
+                        str+="          <a href='/mypage/main?userid="+list[i].writer+"'><img class='rounded-circle' src='/resources/img/common.jpg' width='30px' height='30px'></a>";
                         str+="          <strong class='primary-font'>"+list[i].nickname+"</strong>";
                         // str+="          <button type='button' id='reportBtn'> <img src='/resources/img/siren.jpg' width='20px' height='20px'>신고</button>";
                         str+="          <samll class='pull-right text-muted' id='commentTs'>등록 "+replyService.displayTime(list[i].insert_ts)+" <c:if test='"+list[i].update_ts+"'><br>수정 "+replyService.displayTime(list[i].update_ts)+"</c:if>"+"</small>";
@@ -121,13 +118,10 @@
                         str+="</li>";
                         str+="<hr>";
                     }
-
                     replyUL.html(str);
                 })//end function
             }//showList
             
-
-
             $("#addReplyBtn").on("click",function(e){
                 console.log("addReplyBtn")
                 modal.find("input").val("");
@@ -145,30 +139,23 @@
                 };
                 replyService.add(reply,function(result){
                     alert(result); 
-
                     modal.find("input").val("");
                     modal.modal("hide");
                     showList(1);
                 })
             })//modalRegisterBtn
-
-
             // $("#replycontent").css('cursor','pointer')
-
             $(".chat").on("click","li",function(e){
                 console.log(" >> chat clicked.");
                 bcno=$(this).data("bcno");
                 console.log(".chat bcno:"+bcno);
-
                 replyService.get(bcno, function(reply){
                     console.log(reply);
                     modalInputReply.val(reply.content);
                     modalInputReplyer.val(reply.nickname).attr("readonly","readonly");
                     modalinputReplyDate.val(replyService.displayTime(reply.update_ts)).attr("readonly","readonly").hide();
                     modal.data("bcno",reply.bcno);
-
                     modal.find("button[id!='modalCloseBtn']");
-
                     if("${__LOGIN__.userId}"==reply.writer){
                         modalModBtn.show();
                         modalRemoveBtn.show();
@@ -182,7 +169,6 @@
                     $("#createComment").modal("show");
                 })
             })
-
             modalModBtn.on("click",function(e){
                 console.log("modalModBtn Clicked");
             	var reply2={
@@ -196,7 +182,6 @@
 					showList(1);
 				})
             })
-
 			modalRemoveBtn.on("click",function(e){
                 console.log("removeBtn clicked >> bcno:" +bcno);
 				replyService.remove(bcno, function(result){
@@ -205,24 +190,19 @@
 					showList(1);
 				})
 			})
-
             $("#reportBtn").on("click",function(e){
                 console.log("reportBtn clicked>>")
                 $("#reportmodal").modal("show");
-
             })
 
-
-            var modalReportCode=modal.find("select[name='reportcode']").val();
-            var modalAccuser=modal.find("input[name='reportwriter']").val();
-            var modalTargetType=modal.find("input[name='reporttype']").val();
-            var modalTarget=modal.find("input[name='reporttarget']").val();
-            var modalSuspect=modal.find("input[name='suspect']").val();
-
-            var modalReportContent=modal.find("textarea[name='rContent']");
-
-
             $("#modalReportBtn").on("click",function(e){
+            	 var modalReportCode=modal.find("#reportcode").val();
+                 console.log(modalReportCode);
+                 var modalAccuser=modal.find("input[name='reportwriter']").val();
+                 var modalTargetType=modal.find("input[name='reporttype']").val();
+                 var modalTarget=modal.find("input[name='reporttarget']").val();
+                 var modalSuspect=modal.find("input[name='suspect']").val();
+                 var modalReportContent=modal.find("textarea[name='rContent']");
                 console.log("modalReportBtn Clicked.");
                 var reportinfo={
                     code: modalReportCode,
@@ -239,23 +219,19 @@
                 })
             })
     	})//jq
-
-
-
         $(function(){
             console.debug('>>> jq started.');
-
             $("#listBtn").on('click',function(){
                 console.log(" >>> listBtn button clicked");
                 location.href="/board/list?currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
             }) //on click
-
             $("#modifyBtn").on('click',function(){
                 console.log(" >>> modifyBtn clicked");
                 location.href="/board/modify?bno=${board.bno}&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
             })//onclick
 
-            $("#delete").on('click',function(){
+            $("#delete, #admindeleteBtn").on('click',function(){
+
                 console.log("delete clicked.");
                 if(confirm("게시글을 삭제하시겠습니까?")){
                     let formobj=$('form');
@@ -267,23 +243,12 @@
                 }//if-else
             })//delete
             
+            
         })//js
-
     </script>
 
     <style>
-        body,input,textarea,select,button,table{font-family:'ELAND 초이스';}
-        body,div,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,p,form,fieldset,input,table,tr,th,td{margin:0;padding:0;}
-        h1,h2,h3,h4,h5,h6{font-weight:normal;font-size:100%;}
-        ul,ol{list-style:none;}
-        fieldset,img{border:0; vertical-align:top;}
-        address{font-style:normal;}
-        p,li,dd{font-size:1em; line-height:1.5em; text-align:justify;}
-        /* a-style */
-        a{color:#333;text-decoration:none;text-align: center;}
-        a:hover,a:active,a:focus,a:visited{color:#333;text-decoration:none;}
-
-        body{
+        #boardGetWrapper{
 		    width: 998px;
 		    margin: 0 auto;
 		    font-size: 20px;
@@ -337,23 +302,18 @@
             margin-left: 32px;
             margin-top: 10px;
         }
-
         button {
             margin-left: 20px;
-
             background-color: white;
             font-family: "ELAND 초이스";
             font-size: 20px;
             font-weight: 400;
             text-align: center;
             text-decoration: none;
-
             display: inline-block;
             width: auto;
-
             border: none;
             border-radius: 4px;
-
             /* box-shadow: 0 4px 6px -1px rgba(169, 235, 255, 0.781), 0 2px 4px -1px rgba(125, 160, 212, 0.425); */
             cursor: pointer;
             transition: 0.5s;
@@ -365,7 +325,6 @@
             width: 20px;
             height: 20px;
         }
-
         table {
 			width:100px;
 		    text-align: center;
@@ -399,16 +358,22 @@
             float: right;
         }
         #isDeleteTs{
-            margin-top: 300px;
+            margin-top: 200px;
             margin-left: 400px;
+        }
+        #nocomment{
+            margin-bottom: 250px;
         }
     </style>
 
 </head>
 <body>
+    <%@ include file="/resources/html/header.jsp" %>
+    <div id="boardGetWrapper">
     <c:choose>
     <c:when test="${board.delete_ts!=null}">
         <p id="isDeleteTs"><img src="/resources/img/choonsigi.jpg" alt=""><br>삭제된 게시글 입니다.</p>
+        <button><a>리스트로 돌아가기</a></button>
     </c:when>
     <c:otherwise>
     <div id="container">
@@ -436,9 +401,9 @@
                 <form action="/mypage/main">
                     <ul id="userinfo">
                         <li>
-                            <a href="/mypage/main?user=${board.writer}"><img class="rounded-circle" src="/resources/img/common.jpg" alt="내사진" width="100px" height="100px"></a>
+                            <a href="/mypage/main?userid=${board.writer}"><img class="rounded-circle" src="/resources/img/common.jpg" alt="내사진" width="100px" height="100px"></a>
                         </li>
-                        <li><a href="/mypage/main?user=${board.writer}">${board.nickname}</a></li>
+                        <li><a href="/mypage/main?userid=${board.writer}">${board.nickname}</a></li>
                     </ul>
                     <ul id="getinfo">
                         <li>작성일 <fmt:formatDate pattern="yyyy/MM/dd" value="${board.insert_ts}"/></li>
@@ -496,6 +461,7 @@
             </div>
             <hr>
             <div id="threeBtn">
+                <button type="button" id="admindeleteBtn" class="btn btn-danger">관리자 권한 삭제</button>
                 <button type="button" id="modifyBtn" class="btn btn-outline-dark">수정</button>
                 <button type="button" id="delete" class="btn btn-outline-dark">삭제</button>
                 <button type="button" id="listBtn" class="btn btn-outline-dark">목록</button>
@@ -516,7 +482,6 @@
                             <i class="fa fa-comments fa-fw"></i><strong>댓글 목록</strong>
                             <button type="button" id="addReplyBtn" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">새 댓글 쓰기</button>
                             <hr>
-                            <!-- Modal -->
                         </div>
                         <div class="panel-body">
                             <ul class="chat">
@@ -577,7 +542,7 @@
                     <div class="modal-body">
                         <div>
                             <label for="reportcode">신고유형</label>
-                            <select class="form-select" name="reportcode">
+                            <select class="form-select" name="reportcode" id='reportcode'>
                                 <option value="1">욕설/비방</option>
                                 <option value="2">스포일러</option>
                                 <option value="3">광고</option>
@@ -614,6 +579,9 @@
     </div>
     </c:otherwise>
     </c:choose>
+    </div>
+    <%@ include file="/resources/html/footer.jsp" %>
+
 </body>
 
 </html>

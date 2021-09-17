@@ -22,5 +22,6 @@ public class ReportVO {
 	private Date check_ts;			//신고확인일
 	private Date complete_ts;		//처리일
 	private Integer mgr_id;			//처리관리자ID
+	private String nickname;		//처리관리자닉네임
 	
 }

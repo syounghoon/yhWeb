@@ -2,32 +2,29 @@
 .clearfix:after {
 	content: '';
 	display: inline-block;
-    width: 500px;
-    float: right;
+    width: 900px;
+	margin: 0 auto;
 }
 /* ======== Calendar ======== */
 .my-calendar {
 	display: inline-block;
-	width: 700px;
+	width: 800px;
 	padding: 20px 20px 10px;
 	text-align: center;
 	font-weight: 800;
 	border: 1px solid #ddd;
-	cursor: default;
-    float: right;
+	margin: 0 auto;
 }
 
 .my-calendar .clicked-date {
 	border-radius: 25px;
 	margin-top: 36px;
-	float: left;
 	width: 42%;
 	padding: 46px 0 26px;
 	background: #ddd;
 }
 
 .my-calendar .calendar-box {
-	float: right;
 	width: 58%;
 	padding-left: 30px;
 }
@@ -48,7 +45,7 @@
 
 .ctr-box .btn-cal {
 	position: relative;
-	float: left;
+	/* float: left; */
 	width: 25px;
 	height: 25px;
 	margin-top: 5px;
@@ -71,7 +68,7 @@
 }
 
 .ctr-box .btn-cal.next {
-	float: right;
+	/* float: right; */
 }
 
 .ctr-box .btn-cal.next:after {
@@ -146,7 +143,7 @@
 }
 
 #content {
-	float: left;
+	/* float: left; */
 	padding:50px 50px;
 	margin: 0 0 0 60px;
 	padding-bottom: 40px;
@@ -175,7 +172,7 @@ body#cafeAdmin #content.adm_home {
 }
 
 .next_stat_btn, .prev_stat_btn {
-	float: left;
+	/* float: left; */
 	display: inline-block;
 	width: 10px;
 	height: 17px;
@@ -222,7 +219,7 @@ a, a:hover {
 .stat_date {
 	position: relative;
 	top: -2px;
-	float: left;
+	/* float: left; */
 	display: inline-block;
 	padding: 0 14px;
 	height: 19px;
@@ -239,27 +236,6 @@ a, a:hover {
 	right: 0;
 	font-size: 13px;
 	color: #888;
-}
-
-}
-.box_stat {
-	position: relative;
-	margin-top: 20px;
-	width: 840px;
-	height: 200px;
-	box-sizing: border-box;
-	border: 1px solid #e2e2e2;
-	background-color: #fafafa;
-}
-
-.box_stat .stat {
-	position: relative;
-	display: inline-block;
-	width: 180px;
-	height: 88px;
-	padding: 38px 30px;
-	vertical-align: top;
-	float: left;
 }
 
 .stat_title {
@@ -361,29 +337,30 @@ font-weight: 700;
 .box_stat {
 	position: relative;
 	margin-top: 20px;
-	width: 860px;
-	height: 200px;
+	width: 900px;
+	height: 170px;
 	box-sizing: border-box;
 	border: 1px solid #e2e2e2;
 	background-color: #fafafa;
-	padding: 0px 0px 0 60px;
+	padding: 0 0 0 10px;
 }
 
 .box_stat .stat {
-position: relative;
+	position: relative;
     display: inline-block;
-    width: 196px;
+    width: 19%;
     height: 88px;
     padding: 38px 30px;
     vertical-align: top;
-    float: left;
+	text-align: center;
+    /* float: left; */
 }
 
 .testDatePicker{
     width: 220px;
     height: 40px;
     border-radius: 5px;
-    float: left;
+    /* float: left; */
     margin-left: 10px;
     margin-top: 10px;
     text-align: center;
@@ -398,7 +375,7 @@ position: relative;
     margin-left: 370px;
     text-align: center;
     margin-top: -8px;
-    float: left;
+    /* float: left; */
 }
 div.avatar.avatar-xl > img.calendar{
 	width: 50px;

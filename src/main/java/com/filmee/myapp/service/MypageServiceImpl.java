@@ -362,8 +362,8 @@ public class MypageServiceImpl
 	} //isFollowed
 	
 	@Override
-	public boolean updateUserProfilePhoto(MultipartFile file, String profileText, CriteriaMain cri) throws IllegalStateException, IOException {		
-		log.debug("updateUserProfilePhoto({}, {}, {}) invoked.", file, profileText, cri);
+	public boolean updateUserProfilePhoto(MultipartFile file, String profileText, String nickname, CriteriaMain cri) throws IllegalStateException, IOException {		
+		log.debug("updateUserProfilePhoto({}, {}, {}, {}) invoked.", file, profileText, nickname, cri);
 		
 		Objects.requireNonNull(this.mapper);
 		
@@ -419,7 +419,7 @@ public class MypageServiceImpl
         	} //if
         } //try-catch-finally
 		
-		if(this.mapper.updateUserProfilePhoto(destinationFileName, profileText, cri.getUserid()) == 1) {
+		if(this.mapper.updateUserProfilePhoto(destinationFileName, profileText, nickname, cri.getUserid()) == 1) {
 			
 			return true;
 		} else {
@@ -428,6 +428,22 @@ public class MypageServiceImpl
 		} //if-else
 		
 	} //updateUserProfilePhoto
+	
+	@Override
+	public boolean updateUserProfile(String profileText, String nickname, CriteriaMain cri) {
+		log.debug("updateUserProfile({}, {}, {}) invoked.", profileText, nickname, cri);
+		
+		Objects.requireNonNull(this.mapper);
+		
+		if(this.mapper.updateUserProfile(profileText, nickname, cri.getUserid()) == 1) {
+			
+			return true;
+		} else {
+			
+			return false;
+		} //if-else
+		
+	} //updateUserProfile
 	
 
 } //end class

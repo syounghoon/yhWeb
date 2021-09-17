@@ -35,6 +35,8 @@ public class JoinServiceImpl
 	public void afterPropertiesSet() throws Exception {
 		log.debug("afterPropertiesSet() invoked.");
 		
+		Objects.requireNonNull(this.hashUtils);
+		Objects.requireNonNull(this.mailService);
 		Objects.requireNonNull(this.mapper);
 	}//afterPropertiesSet
 	
@@ -42,7 +44,7 @@ public class JoinServiceImpl
 	@Override
 	public int join(UserDTO dto) throws Exception {
 		log.debug("join({}) invoked.", dto);
-		
+				
 		String salt = hashUtils.getSalt();		//유저 고유의 salt 생성
 		String hashedPw = hashUtils.hashing(dto.getPassword(), salt);	//비밀번호와 salt를 함께 hashing
 		
@@ -59,6 +61,25 @@ public class JoinServiceImpl
 		
 		return affectedLines;
 	}//join
+	
+	@Override
+	public int joinBySocial(UserDTO dto) throws Exception {
+		log.debug("joinBySocial({}) invoked.", dto);
+		
+		String randPw = this.mailService.getRandomCode(MailSendService.TEMP_PW);	//랜덤비밀번호 생성
+		
+		String salt = hashUtils.getSalt();		//유저 고유의 salt 생성
+		String hashedPw = hashUtils.hashing(randPw, salt);	//비밀번호와 salt를 함께 hashing
+		
+		//dto에 hash 처리 된 비밀번호와 salt, 이메일 인증번호 저장 저장
+		dto.setPassword(hashedPw);
+		dto.setSalt(salt);
+		dto.setAuthCode("authorized");
+		
+		int affectedLines = this.mapper.insertUser(dto);
+		
+		return affectedLines;
+	}//joinBySocial
 
 
 	@Override
@@ -91,6 +112,19 @@ public class JoinServiceImpl
 		}//if-else
 			
 	}//isEmailAuthorized
+
+
+	@Override
+	public int deleteAccount(Integer userId) throws Exception {
+		log.debug("deleteAccount({}) invoked.", userId);
+		
+		int affectedLines = this.mapper.updateUserAsDeleted(userId);
+		
+		log.info("affectedLines : {}", affectedLines);
+		
+		return affectedLines;
+			
+	}//deleteAccount
 
 
 }//end class

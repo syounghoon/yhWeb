@@ -97,6 +97,8 @@ public interface MypageMapper {
 	
 	//---------------------------------------------------------------------------------//
 	
-	public abstract int updateUserProfilePhoto(String fileName, String profileText, Integer userid);
+	public abstract int updateUserProfilePhoto(String fileName, String profileText, String nickname, Integer userid);
+	
+	public abstract int updateUserProfile(String profileText, String nickname, Integer userid);
 
 } //end interface

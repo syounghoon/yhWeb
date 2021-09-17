@@ -3,6 +3,8 @@ package com.filmee.myapp.controller;
 import java.util.List;
 import java.util.Objects;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.filmee.myapp.domain.ComCriteria;
 import com.filmee.myapp.domain.ComPageDTO;
 import com.filmee.myapp.domain.ComplaintVO;
+import com.filmee.myapp.domain.UserVO;
 import com.filmee.myapp.service.ComplaintService;
+import com.filmee.myapp.service.LoginService;
+import com.filmee.myapp.service.MailSendService;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,7 +35,13 @@ import lombok.extern.log4j.Log4j2;
 @Controller
 public class ComplaintController
    implements InitializingBean{
-
+	
+	@Setter(onMethod_=@Autowired)
+	private LoginService loginService;
+	
+	@Setter(onMethod_= @Autowired)
+	private MailSendService mailSend;
+	
    @Setter(onMethod_= @Autowired)
    private ComplaintService service;
    
@@ -47,39 +58,24 @@ public class ComplaintController
 
    
    @PostMapping("register")
-   public String regeister(ComplaintVO complaint,RedirectAttributes rttrs) {
+   public String register(
+		   ComplaintVO complaint,
+		   RedirectAttributes rttrs,
+		   HttpServletRequest request
+		   ) {
 	   log.debug("register({},{}) invoked", complaint,rttrs) ;
 	   
 	   
 	   boolean isRegister = this.service.register(complaint);
-		if(isRegister) {	//요청 성공일 때
-			rttrs.addAttribute("result", "success");
-		}//if
-//     return "/complaint/register";
-     return "redirect:/complaint/register";
-   }//regeister
-   
-   
-   @GetMapping("register")
-   public void regeister() {
-	   log.debug("register({}) invoked") ;
+	   String referer = (String)request.getHeader("REFERER");
 	   
+		if(isRegister) {	//요청 성공일 때
+			rttrs.addFlashAttribute("comResult", "요청완료");
+		}//if
+     return "redirect:"+referer;
    }//regeister
-
-   @GetMapping("list")
-	public String list(Model model) {
-		log.debug("list({}) invoked.", model);
-		
-		List<ComplaintVO> complaint = this.service.getList();
-		
-		assert complaint != null;
-		
-		complaint.forEach(log::info);
-		
-		model.addAttribute("list", complaint);
-		return "complaint/mgr";
-	}//list
-
+   
+  
 
    @GetMapping("listPerPage")
 	public String listPerPage(
@@ -92,18 +88,17 @@ public class ComplaintController
 		List<ComplaintVO> complaint = this.service.getListPerPage(cri);
 		
 		Objects.requireNonNull(complaint);
-		complaint.forEach(log::info);
 		
 		ComPageDTO pageDTO = new ComPageDTO(cri,this.service.getTotal(cri));
 		
 		model.addAttribute("list", complaint);
 		model.addAttribute("pageMaker", pageDTO);
 		
-		return "complaint/mgr";
+		return "complaint/comList";
 	}//listPerPAge
 	
 	@GetMapping( "get" )
-	public void get(
+	public String get(
 			@ModelAttribute("cri") ComCriteria cri,
 			@RequestParam("compno") Integer compno, 
 			Model model
@@ -114,51 +109,37 @@ public class ComplaintController
 		
 		assert complaint != null;
 		
-		log.info("\t+ board : {}", complaint);
-		
+		log.info("\t+ get : {}", complaint);
+
 		model.addAttribute("complaint", complaint);
+
+		return "complaint/comGet";
 	}//get
 	
-	@PostMapping("remove")
-	public String remove(
-			@ModelAttribute("cri") ComCriteria cri,
-			@RequestParam("compno") Integer compno,
-			RedirectAttributes rttrs
-			) {
-		log.debug("remove({}, {}, {}) invoked.", cri, compno, rttrs);
-		
-		this.service.remove(compno);
-	
-		rttrs.addAttribute("currPage", cri.getCurrPage());
-		rttrs.addAttribute("amount", cri.getAmount());
-		rttrs.addAttribute("pagesPerPage", cri.getPagesPerPage());
-		
-		return "redirect:/complaint/mgr";
-	}//remove
-	
-
-	
-	
 	@PostMapping("temporary")
-	public String temporary(
+	public String temporaryUpdate(
 			@ModelAttribute("cri") ComCriteria cri,
 			ComplaintVO complaint,
 			RedirectAttributes rttrs
 			) {
 		log.debug("temporary({}, {}, {}) invoked.", cri, complaint, rttrs);
 		
-		boolean isTemporary = this.service.temporary(complaint);
-		
-		if(isTemporary) {
-			rttrs.addAttribute("result", "success");
-		}//if
-		
+
+		boolean isTemporary = this.service.temporaryUpdate(complaint);
+
+
+		if(isTemporary == false) {
+			log.info("=====================================================");
+			log.info("\t+isTemporary:{}",isTemporary);
+			log.info("=====================================================");
+			rttrs.addFlashAttribute("comResult", "이미 처리된 요청사항입니다.");
+		}
+
 		rttrs.addAttribute("currPage", cri.getCurrPage());
 		rttrs.addAttribute("amount", cri.getAmount());
 		rttrs.addAttribute("pagesPerPage", cri.getPagesPerPage());
 
-
-		return "redirect:complaint/mgr";
+		return "redirect:/complaint/listPerPage";
 	}
 	
 	@PostMapping("completion")
@@ -166,27 +147,22 @@ public class ComplaintController
 			@ModelAttribute("cri") ComCriteria cri,
 			ComplaintVO complaint,
 			RedirectAttributes rttrs
-			) {
-		log.debug("completion({}, {}, {}) invoked.", cri, complaint, rttrs);
-		
-		boolean isCompletion = this.service.temporary(complaint);
-		
-		if(isCompletion) {
-			rttrs.addAttribute("result", "success");
-		}//if
-		
+			) throws Exception {
+		log.debug("completion({}, {}, {},{}) invoked.", cri, complaint, rttrs);
+
+		boolean isCompletion = this.service.completion( complaint);
+		log.info("=====================================================");
+		log.info("\t+isCompletion:{}",isCompletion);
+		log.info("=====================================================");
+		if(isCompletion == false) {
+			rttrs.addFlashAttribute("comResult", "이미 처리된 요청사항입니다.");
+		}
+				
 		rttrs.addAttribute("currPage", cri.getCurrPage());
 		rttrs.addAttribute("amount", cri.getAmount());
 		rttrs.addAttribute("pagesPerPage", cri.getPagesPerPage());
 
-
-		return "redirect:/complaint/mgr";
+		return "redirect:/complaint/listPerPage";
 	}
-   
-
-   
-
-
-
 
 }

@@ -9,6 +9,8 @@ public interface LoginMapper {
 
 	public abstract UserVO selectUser(UserDTO dto) throws Exception;
 	
+	public abstract UserVO selectUserBySocialEmail(String email) throws Exception;
+	
 	public abstract String selectSaltWithEmail(String email) throws Exception;
 	
 	public abstract int updateUserRememberMe(String email, String rememberCookie, Date rememberAge) throws Exception;

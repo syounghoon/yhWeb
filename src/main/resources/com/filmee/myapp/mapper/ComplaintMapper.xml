@@ -9,21 +9,20 @@
 	    <insert id="insert">
 	        
 	        INSERT INTO fm_complaint (code, content,writer)
-	        VALUES(#{code},#{content},2)
+	        VALUES(#{code},#{content},#{writer})
 	
 	    </insert>
+	
+	    
+	    <select id="userEmail" resultType="String">
+		    <![CDATA[ 
+		        SELECT  email
+				FROM fm_complaint , fm_user 
+				WHERE writer = user_id 
+				AND compno=#{compno}
+		    ]]>
+	    </select>
 
-	    <insert id="insertSelectKey">
-	        <selectKey keyProperty="compno" order="BEFORE" resultType="int">
-	            SELECT ISEQ$$_101551.nextval FROM dual
-	        </selectKey>
-	
-	        <!-- 새로운 pk의 값을 생성하는 sql문 
-	            아래 sql문 보다 먼저(order값) 수행한 뒤 pk 값을 keyProperty에  resultType 타입으로 저장한다.-->
-	
-	        INSERT INTO fm_complaint(compno, code, content, writer)
-	        VALUES(#{compno}, #{code}, #{content}, 2)
-    	</insert>
 	    
 	     <select id="getList" resultType="com.filmee.myapp.domain.ComplaintVO">
 	        <![CDATA[ 
@@ -31,6 +30,7 @@
 	            FROM fm_complaint
 	        ]]>
     	</select>
+
 
 		<select id="select" resultType="com.filmee.myapp.domain.ComplaintVO">
 		    <![CDATA[ 
@@ -40,20 +40,9 @@
 		    ]]>
 	    </select>
 
-    <!-- DML 문장은 result type 없이 자동으로 몇개의 행이 영향을 받았는지 리턴한다 -->
-	    <delete id="delete">
-	        <![CDATA[ 
-		        DELETE FROM fm_complaint
-		        WHERE compno = #{compno}
-	   		]]>
-	
-	    </delete>
-    
-
 		<select 
 	        id="getListWithPaging" 
 	        resultType="com.filmee.myapp.domain.ComplaintVO">
-	        
 	        
             SELECT 
             	/*+ index_desc(fm_complaint) */ * 
@@ -62,17 +51,21 @@
             <where>
                 <choose>
                 
-                    <when test="type eq 'T'.toString()">
-                      title LIKE '%'||#{keyword}||'%'
+                    <when test="code eq '1'.toString()">
+                      code LIKE 1
                     </when>   
                     
-                    <when test="type eq 'C'.toString()">
-                        content LIKE '%'||#{keyword}||'%'
+                    <when test="code eq '2'.toString()">
+                      code LIKE 2
                     </when>  
                     
-                    <when test="type eq 'W'.toString()">
-                       writer LIKE '%'||#{keyword}||'%'
+                    <when test="code eq '3'.toString()">
+                      code LIKE 3
                     </when>  
+                    
+                    <when test="code eq '4'.toString()">
+                      code LIKE 4
+	                </when>
                     
                 </choose>   
             </where>
@@ -81,27 +74,30 @@
 	       
     	</select>
     	
+    	
     	<update id="update">
 	        <![CDATA[ 
 	            UPDATE fm_complaint
 	            SET
-	            	content = #{content},
-	                check_ts = sysdate
+	            	content_re = #{content_re},
+	                check_ts = current_date
 	            WHERE
 	                compno = #{compno}
 	        ]]>
 	    </update>
 	    
-	    <update id="update_end">
+	    
+	    <update id="updateEnd">
 	        <![CDATA[ 
 	            UPDATE fm_complaint
 	            SET
-	            	content = #{content},
-	                complete_ts = sysdate
+	            	content_re = #{content_re},
+	                complete_ts = current_date
 	            WHERE
 	                compno = #{compno}
 	        ]]>
 	    </update>
+
 
     	<select id="getTotalCount" resultType="int">
 	        SELECT count(compno)
@@ -109,17 +105,20 @@
 	        WHERE compno > 0
         		<choose>
                 
-                    <when test="type eq 'T'.toString()">
-                   AND    title LIKE '%'||#{keyword}||'%'
+                	<when test="code eq '1'.toString()">
+                   AND    code LIKE 1
                     </when>   
                     
-                    <when test="type eq 'C'.toString()">
-                    AND    content LIKE '%'||#{keyword}||'%'
-                    </when>  
+                    <when test="code eq '2'.toString()">
+                   AND    code LIKE 2
+                    </when>    
                     
-                    <when test="type eq 'W'.toString()">
-                   AND     writer LIKE '%'||#{keyword}||'%'
-                    </when>  
+                   <when test="code eq '3'.toString()">
+                   AND    code LIKE 3
+                    </when>   
+                    <when test="code eq '4'.toString()">
+                   AND    code LIKE 4
+                    </when>    
                     
                 </choose> 
 	    </select>

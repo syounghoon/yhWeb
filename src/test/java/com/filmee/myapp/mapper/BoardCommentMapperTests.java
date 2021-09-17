@@ -1,6 +1,5 @@
 package com.filmee.myapp.mapper;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.junit.Before;
@@ -11,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.filmee.myapp.domain.BoardCommentVO;
-import com.filmee.myapp.domain.Criteria;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;

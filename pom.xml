@@ -34,7 +34,7 @@
 	
 	
 	<dependencies>
-	
+
 		<!-- javax.xml.bind/jaxb-api -->
 		<dependency>
 		    <groupId>javax.xml.bind</groupId>
@@ -45,11 +45,17 @@
 	
 	
 		<!-- aws-java-sdk-s3 -->
+
+		<!-- ============= S3 ============= -->
+		
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
+
 		<dependency>
 		    <groupId>com.amazonaws</groupId>
 		    <artifactId>aws-java-sdk-s3</artifactId>
 		    <version>1.12.65</version>
 		</dependency>
+
 		
 	
 	
@@ -240,6 +246,8 @@
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-core</artifactId>
 		    <version>${org.springsecurity-version}</version>
+
+
 		</dependency>
 		
 		<!-- spring-context-support -->
@@ -247,7 +255,9 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
 			<version>${org.springframework-version}</version>
+
 		</dependency>
+		
 
 		<!-- ================== Testing ================== -->
 
@@ -317,6 +327,8 @@
 		    <artifactId>javax.mail</artifactId>
 		    <version>1.6.2</version>
 		</dependency>
+
+
 
 		<!-- ====================== Misc ==================== -->
 		

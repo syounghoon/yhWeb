@@ -107,12 +107,20 @@
 	position: absolute;
 	width: 60px;
 	height: 60px;
+<<<<<<< HEAD
+	background: rgba(4, 178, 217, 1);
+=======
 	
+>>>>>>> b0276caad4151a0383b18c2dd8e12c1ac4a59640
 	color: #fff;
 	border-radius: 50%;
 	text-align: center;
 	top: 50%;
+<<<<<<< HEAD
+	box-shadow: 2px 2px 5px gray;
+=======
 	
+>>>>>>> b0276caad4151a0383b18c2dd8e12c1ac4a59640
 	transition: all 0.2s
 }
 .feature .button div:active {
@@ -124,14 +132,24 @@
 }
 
 .feature .back a {
+<<<<<<< HEAD
+	/* background: url(../resources/img/back.svg) center center no-repeat; */
+	/* background-size: 30px 30px; */
+=======
 	background: url(../resources/img/back-svgrepo-com.svg) center center no-repeat;
 	background-size: 30px 30px;
+>>>>>>> b0276caad4151a0383b18c2dd8e12c1ac4a59640
     text-indent: -999px; overflow: hidden;
 }
 
 .feature .next a {
+<<<<<<< HEAD
+	/* background: url(../resources/img/next.svg) center center no-repeat; */
+	/* background-size: 30px 30px; */
+=======
 	background: url(../resources/img/next-svgrepo-com.svg) center center no-repeat;
 	background-size: 30px 30px;
+>>>>>>> b0276caad4151a0383b18c2dd8e12c1ac4a59640
     text-indent: -999px; overflow: hidden;
 }
 

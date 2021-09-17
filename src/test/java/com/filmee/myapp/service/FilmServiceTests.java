@@ -17,7 +17,7 @@ import com.filmee.myapp.domain.FilmGenreVO;
 import com.filmee.myapp.domain.FilmPeopleVO;
 import com.filmee.myapp.domain.FilmVO;
 import com.filmee.myapp.domain.ReviewFilmUserVO;
-import com.filmee.myapp.domain.ReviewVO;
+import com.filmee.myapp.domain.ReviewDTO;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -77,15 +77,16 @@ public class FilmServiceTests {
 	public void testRegister() {
 		log.debug("testRegister() invoked.");
 		
-		ReviewVO review = 
-			new ReviewVO(
-				null, 
-				577922, 
-				3, 
-				4.5, 
-				"테넷 리뷰2", 
-				null, null, null,
-				null, 'f',0);
+		ReviewDTO review = new ReviewDTO();
+//		ReviewDTO review =
+//			new ReviewDTO(
+//				null, 
+//				577922, 
+//				3, 
+//				4.5,  
+//				"테넷 리뷰3", 
+//				null, null, null,
+//				'f',0);
 		
 		log.info("\t+ review: " + review);
 		
@@ -133,16 +134,18 @@ public class FilmServiceTests {
 	@Test
 	public void testModify() {
 		log.debug("testModify() invoked.");
+
 		
-		ReviewVO review = 
-			new ReviewVO(
-				131, 
-				577922, 
-				3, 
-				4.5, 
-				"테넷ㅅㅅㅅㅅㅅ", 
-				null, null, null,
-				null, 'f',0);
+		ReviewDTO review = new ReviewDTO();
+//		ReviewDTO review = 
+//			new ReviewDTO(
+//				131, 
+//				577922, 
+//				3, 
+//				4.5, 
+//				"테넷ㅅㅅㅅㅅㅅ", 
+//				null, null,null,
+//				'f',0);
 		
 		log.info("\t+ review: " + review);
 		

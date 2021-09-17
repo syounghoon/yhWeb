@@ -20,4 +20,5 @@ public class UserVO {
 //	private String RememberCookie;
 //	private Timestamp rememberAge;
 			private String authCode;
-}
+			
+}//end class

@@ -16,7 +16,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.3.2/jquery-migrate.min.js"></script>
 
     <script>
-
         $(function(){
             console.clear();
             console.log("jq started");
@@ -37,59 +36,122 @@
 
                 paginationForm.submit();
             })//onclick
+
+
         })//jq
+        function reportComplete(rptno, mgr_id,callback,error){
+            $.ajax({
+                type:'post',
+                url:'/admin/report/complete/'+rptno+"/"+mgr_id,
+                success: function(result, status, xhr){
+                    if(callback){
+                        callback(result);
+                    }//if
+                }, //success
+                error: function(xhr,status,er){
+                    if(error){
+                        error(er);
+                    }//of
+                }//error
+            })//ajax
+        }//reportComplete
+
+        function detail(rptno, code, accuser, content, suspect){
+            var detail=$('#detailmodal')
+            console.log("detail>> " + rptno); 
+            if(code==1){
+                $('#reportcode').attr("value", "욕설/비방");
+            } else if (code==2){
+                $('#reportcode').attr("value", "스포일러");
+            } else if (code==3){
+                $('#reportcode').attr("value", "광고");
+            } else{
+                $('#reportcode').attr("value", "기타");
+            }
+
+            $('#reportaccuser').attr("value", accuser);
+            $('#reportcontent').attr("value", content);
+            $('#reportsuspect').attr("value", suspect);
+
+            $(detail).modal("show");
+
+            var mgrid="${__LOGIN__.userId}"
+            $("#modalReportBtn").on('click',function(){
+                console.log("complete clicked.");
+                if(confirm("신고요청을 처리하시겠습니까?")){
+  
+                    reportComplete(rptno, mgrid, function(result){
+	                    $("#detailmodal").on('hidden.bs.modal', function(){           
+		                    location.reload();  
+	                    });//social join on hidden
+                    })//reportComplete
+                } else{
+                	return false;
+                }//if-else
+            })//modalreportbtn
+        }//detail
     </script>
 
 
     <%@ include file="/resources/html/header.jsp" %>
 
     <style>
-        body,input,textarea,select,button,table{font-family:'ELAND 초이스';}
-        body,div,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,p,form,fieldset,input,table,tr,th,td{margin:0;padding:0;}
-        h1,h2,h3,h4,h5,h6{font-weight:normal;font-size:100%;}
-        ul,ol{list-style:none;}
-        fieldset,img{border:0; vertical-align:top;}
-        address{font-style:normal;}
-        p,li,dd{font-size:1em; line-height:1.5em; text-align:justify;}
-        /* a-style */
-        a{color:#333;text-decoration:none;}
-        a:hover,a:active,a:focus,a:visited{color:#333;text-decoration:none;}
-
         body{
-            width: 998px;
-            margin: 0 auto;
             -ms-user-select: none; 
             -moz-user-select: -moz-none;
             -khtml-user-select: none;
             -webkit-user-select: none;
             user-select: none; 
         }
-        #admincontainer{
-            float: right;
-            width: 840px;
+        hr{
+            width: 998px;
+            margin: 0 auto;
+        }
+
+        #container{
+        	margin-bottom: 50px;
+        }
+                
+        #menu{
+        	font-size: 40px;
+        	width: 998px;
+        	margin: 0 auto;
+        	text-align: center;
         }
 		#adminboardlist {
-			width:100%;
+			width: 998px;
+			margin: 0 auto;
 		    text-align: center;
-		    margin: 20px ;
 		    font-size: 20px;
             font-family: 'ELAND 초이스';
   			border-collapse: collapse;
+            border-bottom: 1px solid rgb(224, 224, 224);	
+
         }
 		#adminboardlist>tbody>tr>td{
 		  	color: black;
 		  	font-size:15px;
 		  	padding: 15px;
-  			border-bottom: 1px solid #ddd;	
         }
-        #adminboardlist>thead>tr>th{
-		  	font-weight: bold;
+        #listline{ 
+            background-color: #dddddd;
+            color:rgb(0, 0, 0);
+            font-weight: bold;
 		  	border:10px;
 		  	margin:10px;
 		  	padding:15px;
             font-size: 18px;
   			border-bottom: 1px solid #ddd;
-            background-color: rgb(255, 255, 255);
+  			height: 50px;
+  			line-height: 50px;
+        }
+        #adminmenuinfo{
+            width: 100px;
+            background-color: rgba(65, 105, 225, 0.185);
+            border-radius: 10px;
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 10px;
         }
         #adminboardlist>tbody>tr:hover {
   		  	background-color: #dddddd60;
@@ -110,6 +172,23 @@
         #pageNumber>li:hover{
             background-color: rgb(224, 224, 224);
         }
+        #detailbtn{
+            border-radius: 5px; 
+            margin-right:-4px;
+            border: 1px solid skyblue; 
+            background-color: rgba(0,0,0,0); 
+            color: skyblue; 
+            padding: 5px;
+        }
+        #detailbtn:hover{ 
+            color:rgb(221, 250, 255);
+            background-color: rgb(0, 0, 0); 
+        }
+        .forAdmin:hover{
+            font-size: 17px;
+            font-weight: bold;
+            color: cornflowerblue;
+        }
 		.prev, .next{
 			font-size: 20px;
 		}
@@ -120,39 +199,16 @@
             border-radius: 10%;
             font-size: 15px;
         }
-        .forAdmin {
-            letter-spacing: 2px;
-            text-align: center;
-            font-size: 17px;
-            color: #525252;
-            background-image: -webkit-linear-gradient(92deg, #626ca1, #515bb9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            -webkit-animation: hue 10s infinite linear;
-        }
 
-        @-webkit-keyframes hue {
-            from {
-                -webkit-filter: hue-rotate(0deg);
-            }
-            to {
-                -webkit-filter: hue-rotate(-360deg);
-            }
-        }
     </style>
 </head>
 
 <body>
-    <div>
+    <div id="container">
         <div>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                    <th scope="col" id="adminonly"> 신고 현황 </th>
-                    </tr>
-                </thead>
-            </table>
+            <div id="adminmenuinfo">관리자 전용</div>
             <div id=menu>
+            	<h2>신고 현황</h2>
                 <%@include file="../menu.jsp"%>
             </div>
         </div>
@@ -162,13 +218,14 @@
                 <div>
                     <table id="adminboardlist">
                         <colgroup>
+                            <col width="8%"/>
                             <col width="10%"/>
-                            <col width="13%"/>
-                            <col width="13%"/>
-                            <col width="13%"/>
+                            <col width="12%"/>
+                            <col width="10%"/>
                             <col width="20%"/>
                             <col width="20%"/>
-                            <col width="13%"/>
+                            <col width="10%"/>
+                            <col width="10%"/>
                         </colgroup>
                         <thead>
                             <tr id=listline>
@@ -179,10 +236,11 @@
                                 <th>접수일</th>
                                 <th>처리일</th>
                                 <th>처리자</th>
+                                <th>확인</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${list}" var="report">
+                            <c:forEach items="${list}" var="report" varStatus="vs">
                                     <tr>
                                         <td>${report.rptno}</td>
                                         <td>
@@ -195,23 +253,24 @@
                                         </td>
                                         <td>${report.accuser}</td>
                                         <td>
-                                            <a href="/admin/report/detail?rptno=${report.rptno}&currPage=${pageMaker.cri.currPage}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">
-                                                <c:choose>
-                                                    <c:when test="${report.target_type=='BNO'||report.target_type=='bno'}"><admin class="forAdmin">게시판</admin></c:when>
-                                                    <c:when test="${report.target_type=='BCNO'||report.target_type=='bcno'}"><admin class="forAdmin">게시판댓글</admin></c:when>
-                                                    <c:when test="${report.target_type=='RNO'||report.target_type=='rno'}"><admin class="forAdmin">리뷰</admin></c:when>
-                                                    <c:when test="${report.target_type=='RCNO'||report.target_type=='rcno'}"><admin class="forAdmin">리뷰댓글</admin></c:when>
-                                                </c:choose>
-                                            </a>
+                                            <c:choose>
+                                                <c:when test="${report.target_type=='BNO'||report.target_type=='bno'}"><admin class="forAdmin"><a href="/board/get?bno=${report.target}">게시판</a></admin></c:when>
+                                                <c:when test="${report.target_type=='BCNO'||report.target_type=='bcno'}"><admin class="forAdmin">게시판댓글</admin></c:when>
+                                                <c:when test="${report.target_type=='RNO'||report.target_type=='rno'}"><admin class="forAdmin"><a href="">리뷰</a></admin></c:when>
+                                                <c:when test="${report.target_type=='RCNO'||report.target_type=='rcno'}"><admin class="forAdmin">리뷰댓글</admin></c:when>
+                                            </c:choose>
                                         </td>
-                                        <td><fmt:formatDate pattern="yyyy/MM/dd" value="${report.insert_ts}"/></td>
+                                        <td><fmt:formatDate pattern="yyyy/MM/dd HH:mm:ss" value="${report.insert_ts}"/></td>
                                         <td>
                                             <c:if test="${report.complete_ts==null}">
                                                 <beforeCom id="beforeComplete">처리전</beforeCom>
                                             </c:if>
-                                            <fmt:formatDate pattern="yyyy/MM/dd" value="${report.complete_ts}"/>
+                                            <fmt:formatDate pattern="yyyy/MM/dd HH:mm:ss" value="${report.complete_ts}"/>
                                         </td>
-                                        <td>${report.mgr_id}</td>
+                                        <td>${report.nickname}(${report.mgr_id})</td>
+                                        <td>
+                                            <button onclick="detail('${report.rptno}', '${report.code}', '${report.accuser}', '${report.content}', '${report.suspect}')" type="button" id='detailbtn'>상세확인</button>
+                                        </td>
                                     </tr>
                                 </c:forEach>
                             </tbody>
@@ -244,12 +303,53 @@
                                 <li class="next"><a class="next" href="${pageMaker.endPage+1}"> > </a></li>
                             </c:if>   
                         </ul>
-                    
                     </form>
                 </div>
             </div>
         </div>
-        
+    </div>
+    <%@ include file="/resources/html/footer.jsp" %>
+
+    <!-- Detail Modal -->
+    <div class="modal fade" id="detailmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><img src="/resources/img/siren.jpg" alt="" width="20px" height="20px"> 신고 상세 및 처리</h5>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label for="reportcode">신고유형</label>
+                        <input class="form-control" name="reportcode" id="reportcode" value="${report.code}" readonly>
+                    </div>
+                    <div class="form-group">
+                        신고자 <input class="form-control" name="nickname" id="reportaccuser" value="${report.accuser}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="reportcontent">내용</label>
+                        <input type="text" name="rContent" class="form-control" cols="44" rows="5" id="reportcontent" value="${report.content}" readonly>
+                    </div>      
+                    <div class="form-group">
+                        <label>신고대상</label>
+                        <input class="form-control" name="suspect" id="reportsuspect" value="신고당한유저아이디" readonly> 
+                    </div>
+                    <div>
+                        <label for="mgrid">현재 처리할 관리자</label>
+                        <input class="form-control" type="text" id="mgrid" value="${__LOGIN__.nickname}" readonly>
+                    </div>
+                    <div>
+                        <br>
+                        <label for="susto">회원정지일수</label>
+                        <input type="number" min="0" max="999999" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button id='modalReportBtn' type="button" class="btn btn-danger" data-bs-dismiss="modal">처리완료</button>
+                </div> 
+            </div>
+        </div>
     </div>
 </body>
 </html>

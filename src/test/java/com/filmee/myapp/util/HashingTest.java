@@ -21,7 +21,7 @@ public class HashingTest {
 	@Test
 	public void testHashing() throws NoSuchAlgorithmException {
 		UserDTO dto = new UserDTO();
-		dto.setPassword("111");
+		dto.setPassword("123123");
 		
 		String salt =hashUtils.getSalt();
 		
@@ -31,6 +31,7 @@ public class HashingTest {
 
 		log.info("password : {}", password);
 		log.info("password.length : {}", password.length());
+		
 		
 	
 	}//testHashing

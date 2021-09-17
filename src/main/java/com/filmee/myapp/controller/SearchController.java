@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +17,7 @@ import com.filmee.myapp.domain.SearchFilmGenreVO;
 import com.filmee.myapp.domain.SearchFilmInfoVO;
 import com.filmee.myapp.domain.SearchFilmVO;
 import com.filmee.myapp.domain.SearchPageDTO;
+import com.filmee.myapp.domain.SearchPeopleVO;
 import com.filmee.myapp.domain.SearchUserVO;
 import com.filmee.myapp.service.SearchService;
 
@@ -86,4 +88,18 @@ public class SearchController {
 		return "search/searchUserPage";		
 	} //searchUserPage
 
+	@GetMapping("people/{peopleId}")
+	public String searchPeople(@PathVariable("peopleId") String peopleId, Model model) {
+		log.debug("searchPeople({}) invoked.", peopleId);
+		
+		List<SearchPeopleVO> films = this.service.serachFilmsByPeopleId(peopleId);
+		
+		films.forEach(log::info);
+		
+		model.addAttribute("result", films);
+		
+		return "search/searchPeople";
+	}
+	
+	
 } //end class

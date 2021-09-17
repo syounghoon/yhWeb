@@ -15,8 +15,8 @@ public class ReviewVO {
 	private Timestamp insert_ts;
 	private Timestamp update_ts;
 	private Timestamp delete_ts;
-	private Timestamp watched_date;
-	private Character is_spoiled;
+//	private Timestamp watched_date;
+//	private Character is_spoiled;
 	private Integer like_cnt;
 	
 

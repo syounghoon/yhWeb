@@ -21,8 +21,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.3.2/jquery-migrate.min.js" referrerpolicy="no-referrer"></script>
     
-    <link rel="stylesheet" href="../resources/css/footer.css">
-    
     <script>
     
 	    $(function() {
@@ -68,49 +66,43 @@
     	* {
     		text-decoration-line: none !important;
     	}
-
         #container {
             width: 998px;
             margin: 0 auto;
-
+            font-family:'Florencesans SC Exp', 'ELAND 초이스'; 
             font-family: 'ELAND 초이스'; 
         }
-
         #mypage_top_menu {
             font-size: 16px;
         }
-
         #mypage_mid_menu {
             font-size: 14px;
         }
-
         #film_poster {
-            width: 400px;
-            height: 300px;
+            width: 200px;
+            
         }
         
         #mypage_film_title {
         	font-size: 23px; 
         	font-weight: bold;
         }
-
         #mypage_film_content {             
             overflow: hidden;
         	text-overflow: ellipsis;
         	white-space: normal;
-        	line-height: 1.2;
+
+        	line-height: 2.0;
 
         	text-align: left;
         	word-wrap: break-word;
         	display: -webkit-box;
-        	-webkit-line-clamp: 8 ;
+        	-webkit-line-clamp: 5 ;
        		-webkit-box-orient: vertical;  			
         }
-
        #mypage_button {
         	position: relative
         }
-
        #delBtn {
         	position: absolute;
         	bottom: 10px;
@@ -123,14 +115,16 @@
        
     
     </style>
-    
-    <%@ include file="/resources/html/header.jsp" %>
+
 
 </head>
-<body>
-    
 
-    <section>
+<body>
+
+
+    <%@ include file="/resources/html/header.jsp" %>
+
+     <section>
 
         <div id='container'>
 
@@ -193,6 +187,7 @@
             <div id='mypage_myfilms' class='container-sm'>
 
                 <hr>
+
 				
 				<c:forEach items="${films}" var="films">
 				<form action="/mypage/deleteFilmReaction" method="POST" id='form_${films.userid}_${films.filmid}_${films.code}'>
@@ -204,12 +199,12 @@
 				<input type='hidden' name='pagesPerPage' value='${pageMaker.criFilm.pagesPerPage}'>
 	                <div class='row'>
 	
-	                    <div class='col-6'>
+	                    <div class='col-3'>
 	                        <a href='/film/${films.filmid}'><img src='https://www.themoviedb.org/t/p/original${films.poster}' id='film_poster'></a>
 	                    </div>
 	
-	                    <div class='col-6' id='mypage_button'>
-	                        <a href='/film/${films.filmid}'  id='mypage_film_title'>${films.title}</a><br>
+	                    <div class='col-9' id='mypage_button'>
+	                        <a href='/film/${films.filmid}'  id='mypage_film_title' style='color: blue; font-size: 30px;'>${films.title}</a><br>
 	                        
 	                        <hr>
 	
@@ -228,6 +223,7 @@
 	                </form>
 				</c:forEach>                                  
 
+
             </div>
 
             <div id='section_pagination'>
@@ -235,7 +231,7 @@
                 <hr>
 
                 <form id='form_pagination'>
-                    <input type='hidden' name='userid'>						
+                    <input type='hidden' name='userid'>                  
                     <input type='hidden' name='code'>
                     <input type='hidden' name='currPage'>
                     <input type='hidden' name='amount'>
@@ -244,7 +240,7 @@
                     <nav aria-label="Page navigation example">
                       <ul class="pagination">
                           <c:if test='${pageMaker.prev}'>
-                            <li class="page-item">						    
+                            <li class="page-item">                      
                               <a id='prev' class="page-link" href='${pageMaker.startPage - 1}' aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                               </a>
@@ -252,12 +248,12 @@
                         </c:if>
                         
                         <c:forEach begin='${pageMaker.startPage}' end='${pageMaker.endPage}' var='pageNum'>
-						    <li class="${pageMaker.criFilm.currPage == pageNum ? 'page-item active' : 'page-item'}">
-						    	<a class="page-link" href="/mypage/films?userid=${pageMaker.criFilm.userid}&code=${pageMaker.criFilm.code}&currPage=${pageNum}&amount=${pageMaker.criFilm.amount}&pagesPerPage=${pageMaker.criFilm.pagesPerPage}">${pageNum}</a>
-						    </li>
-						</c:forEach>
+                      <li class="${pageMaker.criFilm.currPage == pageNum ? 'page-item active' : 'page-item'}">
+                         <a class="page-link" href="/mypage/films?userid=${pageMaker.criFilm.userid}&code=${pageMaker.criFilm.code}&currPage=${pageNum}&amount=${pageMaker.criFilm.amount}&pagesPerPage=${pageMaker.criFilm.pagesPerPage}">${pageNum}</a>
+                      </li>
+                  </c:forEach>
 
-                        <c:if test='${pageMaker.next}'>	
+                        <c:if test='${pageMaker.next}'>   
                             <li class="page-item">
                               <a id='next' class="page-link" href='${pageMaker.endPage + 1}' aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
@@ -273,25 +269,7 @@
 
     </section>
 
+    <%@include file="/resources/html/footer.jsp" %>
 
-    <footer>
-        
-        <footer>
-        <div id="footer">
-            <a href="/main">
-                <img id="logoimg" src="/resources/img/filmeeLogo.png" alt="LOGO">
-            </a>
-            <div id="pageinfo">
-                <p>
-                    서울특별시 강남구 <br> 
-                    010-9876-5432<br>
-                    abcedferasdavazsdfzsdf
-                </p>
-            </div>
-            <div id="bugreport">
-                <button>의견보내기</button>
-            </div>
-        </div>
-    </footer>
 </body>
 </html>

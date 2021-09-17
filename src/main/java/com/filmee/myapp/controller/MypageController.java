@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
+
+
+
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.filmee.myapp.domain.ActivityVO;
@@ -40,9 +44,12 @@ import com.filmee.myapp.domain.MainReviewVO;
 import com.filmee.myapp.domain.MainUserVO;
 import com.filmee.myapp.domain.MyPageDTO;
 import com.filmee.myapp.domain.MypageReviewVO;
+
+
 import com.filmee.myapp.domain.UserDTO;
 import com.filmee.myapp.domain.UserVO;
 import com.filmee.myapp.service.LoginService;
+
 import com.filmee.myapp.service.MypageService;
 
 import lombok.NoArgsConstructor;
@@ -59,9 +66,12 @@ public class MypageController {
 	@Autowired
 	MypageService service;
 	
+
+
 	@Autowired
 	LoginService loginService;
 	
+
 	@GetMapping("main")
 	public String myPageMain(@ModelAttribute("cri")CriteriaMain cri, Model model, HttpServletRequest req) {
 		log.debug("myPageMain({}, {}) invoked", cri, model);
@@ -374,18 +384,30 @@ public class MypageController {
 		
 		return "redirect:/mypage/likedreviews";
 	} //deleteMyReview
+
+
 	
 	
 	@PostMapping(path = "registerUserProfile", consumes = {"multipart/form-data"})
-	public String registerUserProfile(@ModelAttribute("cri")CriteriaMain cri, @RequestParam("userid") Integer userid, @RequestParam("profileText") String profileText, @RequestPart MultipartFile file, RedirectAttributes rttrs)
+	public String registerUserProfile(@ModelAttribute("cri")CriteriaMain cri, @RequestParam("userid") Integer userid, @RequestParam("profileText") String profileText, @RequestPart MultipartFile file, @RequestParam("nickname") String nickname, RedirectAttributes rttrs)
 			throws IllegalStateException, IOException {
-		log.debug("registerUserProfile({}, {}, {}, {}) invoked.", file, userid, profileText, rttrs);
+		log.debug("registerUserProfile({}, {}, {}, {}, {}) invoked.", file, userid, profileText, nickname, rttrs);
 		
-		boolean isUpdated = this.service.updateUserProfilePhoto(file, profileText, cri);
+		if(file.getSize() != 0) {
+			boolean isUpdated = this.service.updateUserProfilePhoto(file, profileText, nickname, cri);
+			
+			if(isUpdated) {
+				rttrs.addFlashAttribute("result", "success");
+			} //if			
+		} else {
+			
+			boolean isUpdated = this.service.updateUserProfile(profileText, nickname, cri);
+			
+			if(isUpdated) {
+				rttrs.addFlashAttribute("result", "success");
+			} //if
+		} //if-else
 		
-		if(isUpdated) {
-			rttrs.addFlashAttribute("result", "success");
-		} //if
 		
 		rttrs.addAttribute("userid", cri.getUserid());
 		
@@ -403,9 +425,9 @@ public class MypageController {
 		
 		switch(result) {
 			case 1: 
-				log.info(">>>>> result : 1 >>>>>>");
+				log.info(">>>>> result : 1 >>>>>>");				
 				rttrs.addFlashAttribute("message", "temp_pw_sent");
-				return "redirect:/main/forgotPw";	//비밀번호 찾기로 Redirect 후 메세지 띄움
+				return "redirect:/main";	//비밀번호 찾기로 Redirect 후 메세지 띄움
 
 			case 2:
 				log.info(">>>>> result : 2 >>>>>>");
@@ -413,7 +435,7 @@ public class MypageController {
 				return "redirect:/mypage/main";	//마이페이지로 Redirect 후 메세지 띄움
 				
 			default:
-				log.info(">>>>> result : 2 >>>>>>");
+				log.info(">>>>> result : 3 >>>>>>");
 				return "redirect:/main/exception";	//다 안되면 Exception 페이지로 이동
 		}//switch-case
 	
@@ -433,5 +455,6 @@ public class MypageController {
 		}//if-else
 
 	}//checkCurrentPw
+
 
 } //end class

@@ -6,6 +6,7 @@ import com.filmee.myapp.domain.CriteriaSearch;
 import com.filmee.myapp.domain.SearchFilmGenreVO;
 import com.filmee.myapp.domain.SearchFilmInfoVO;
 import com.filmee.myapp.domain.SearchFilmVO;
+import com.filmee.myapp.domain.SearchPeopleVO;
 import com.filmee.myapp.domain.SearchUserVO;
 
 
@@ -27,4 +28,5 @@ public interface SearchService {
 	
 	public abstract int getTotalCountUserSearch(CriteriaSearch cri);
 
+	public abstract List<SearchPeopleVO> serachFilmsByPeopleId(String peopleId);
 } //end interface

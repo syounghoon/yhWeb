@@ -38,7 +38,7 @@ public class ReportServiceTests {
 	public void test() {
 		log.debug("test() invoked.");
 		
-		ReportVO report = new ReportVO(null, "1", 401, "BNO", 531, 1, "허위신고", null, null, null, null);
+		ReportVO report = new ReportVO(null, "1", 401, "BNO", 531, 1, "허위신고", null, null, null, null, null);
 		this.service.reportRegister(report);
 	}
 	

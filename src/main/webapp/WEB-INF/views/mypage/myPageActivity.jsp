@@ -20,9 +20,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.3.2/jquery-migrate.min.js" referrerpolicy="no-referrer"></script>
-    
-    <link rel="stylesheet" href="../resources/css/footer.css">
-    
+
+   
     <script>
     	
     	$(function() {
@@ -53,14 +52,12 @@
     	* {
     		text-decoration-line: none !important;
     	}
-
         #container {
             width: 998px;
             margin: 0 auto;
-
+            font-family:'Florencesans SC Exp', 'ELAND 초이스'; 
             font-family: 'ELAND 초이스'; 
         }
-
         #mypage_top_menu {
             font-size: 16px;
         }
@@ -87,11 +84,12 @@
     
     </style>
 
-	<%@ include file="/resources/html/header.jsp" %>
-
 </head>
+
+
 <body>
 
+	<%@ include file="/resources/html/header.jsp" %>
 
     <section>
 
@@ -139,92 +137,92 @@
 
                 <hr>
 
-                <div id='section_table'>				
+                <div id='section_table'>            
                     
-					<p style='font-size: 18px'>Activity Log</p>
+               <p style='font-size: 18px'>Activity Log</p>
                     
                     <hr>
 
-					<table class="table table-striped table-hover">					
-						<thead>
-							<tr>
-								<th>Content</th>
-								<th>insert_ts</th>
-                                <th></th>															
-							</tr>
-						</thead>
-						
-						<tbody>
-							<c:forEach items="${activity}" var="activity">
-								<tr>
-									<c:set var='type' value='${activity.type}' />
-								
-									<c:choose> 
-									    <c:when test="${type eq 'RV'}">
-									        <td id='activity_review_content_td'>
-									        	<a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이 
-									        	<a class='activity_a' href='/film/${activity.filmid}'>${activity.title}</a>영화에 
-									        	<a class='activity_a' href='/film/${activity.filmid}/review/${activity.rno}' id='activity_review_content_a'>${activity.content}</a> 리뷰를 작성하였습니다.
-									        </td>
-									        <td>${activity.insertTs}</td>
-									    </c:when>
-									    <c:when test="${type eq 'FW'}">
-									        <td>
-									        	<a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nicknameFollower}</a>님이 
-									        	<a class='activity_a' href='/mypage/main?userid=${activity.followerid}'>${activity.nickname}</a>님을 팔로우 하였습니다.
-									        </td>
-									        <td>${activity.insertTs}</td>
-									    </c:when>
-									    <c:when test="${type eq 'RL'}">
-									        <td>
-									        	<a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이									        	
-									        	<a class='activity_a' href='/film/${activity.reviewFilmId}/review/${activity.rno}' id='activity_review_content'>${activity.content}</a> 리뷰를 좋아합니다.									        	
-									        </td>
-									        <td>${activity.insertTs}</td>
-									    </c:when>
-									    <c:when test="${type eq 'GB'}">
-									    	
-									        <td>
-									        	<a class='activity_a' href='/mypage/main?userid=${activity.writer}'>${activity.nicknameGuestbook}</a>님이 방명록을 작성하였습니다.									        									        	
-									        </td>
-									        <td>${activity.insertTs}</td>
-										    
-										</c:when>
-									    <c:when test="${type eq 'FL'}">
-									        <c:set var='code' value='${activity.code}' />
-									        <c:choose>
-										        <c:when test="${code eq '1'}">
-										        	<td>
-										        		<a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이 
-										        		<a class='activity_a' href='/film/${activity.filmid}'>${activity.title}</a>영화를 좋아합니다.
-										        	</td>
-										        	<td>${activity.insertTs}</td>
-										        </c:when>
-										        <c:when test="${code eq '2'}">
-										        	<td>
-										        		<a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이 
-										        		<a class='activity_a' href='/film/${activity.filmid}'>${activity.title}</a>영화를 본영화에 추가했습니다.
-										        	</td>
-										        	<td>${activity.insertTs}</td>
-										        </c:when>
-										        <c:when test="${code eq '3'}">
-										        	<td>
-										        		<a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이 
-										        		<a class='activity_a' href='/film/${activity.filmid}'>${activity.title}</a>영화를 볼영화에 추가했습니다.
-										        	</td>
-										        	<td>${activity.insertTs}</td>
-										        </c:when>
-									        </c:choose>
-									    </c:when>
-									</c:choose>									
-																
-									
-	                                								
-								</tr>
-                           	</c:forEach>			
-						</tbody>						
-					</table>					
-				</div>                               
+               <table class="table table-striped table-hover">               
+                  <thead>
+                     <tr>
+                        <th>Content</th>
+                        <th>insert_ts</th>
+                                <th></th>                                             
+                     </tr>
+                  </thead>
+                  
+                  <tbody>
+                     <c:forEach items="${activity}" var="activity">
+                        <tr>
+                           <c:set var='type' value='${activity.type}' />
+                        
+                           <c:choose> 
+                               <c:when test="${type eq 'RV'}">
+                                   <td id='activity_review_content_td'>
+                                      <a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이 
+                                      <a class='activity_a' href='/film/${activity.filmid}'>${activity.title}</a>영화에 
+                                      <a class='activity_a' href='/film/${activity.filmid}/review/${activity.rno}' id='activity_review_content_a'>${activity.content}</a> 리뷰를 작성하였습니다.
+                                   </td>
+                                   <td>${activity.insertTs}</td>
+                               </c:when>
+                               <c:when test="${type eq 'FW'}">
+                                   <td>
+                                      <a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nicknameFollower}</a>님이 
+                                      <a class='activity_a' href='/mypage/main?userid=${activity.followerid}'>${activity.nickname}</a>님을 팔로우 하였습니다.
+                                   </td>
+                                   <td>${activity.insertTs}</td>
+                               </c:when>
+                               <c:when test="${type eq 'RL'}">
+                                   <td>
+                                      <a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이                                      
+                                      <a class='activity_a' href='/film/${activity.reviewFilmId}/review/${activity.rno}' id='activity_review_content'>${activity.content}</a> 리뷰를 좋아합니다.                                      
+                                   </td>
+                                   <td>${activity.insertTs}</td>
+                               </c:when>
+                               <c:when test="${type eq 'GB'}">
+                                  
+                                   <td>
+                                      <a class='activity_a' href='/mypage/main?userid=${activity.writer}'>${activity.nicknameGuestbook}</a>님이 방명록을 작성하였습니다.                                                                         
+                                   </td>
+                                   <td>${activity.insertTs}</td>
+                                  
+                              </c:when>
+                               <c:when test="${type eq 'FL'}">
+                                   <c:set var='code' value='${activity.code}' />
+                                   <c:choose>
+                                      <c:when test="${code eq '1'}">
+                                         <td>
+                                            <a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이 
+                                            <a class='activity_a' href='/film/${activity.filmid}'>${activity.title}</a>영화를 좋아합니다.
+                                         </td>
+                                         <td>${activity.insertTs}</td>
+                                      </c:when>
+                                      <c:when test="${code eq '2'}">
+                                         <td>
+                                            <a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이 
+                                            <a class='activity_a' href='/film/${activity.filmid}'>${activity.title}</a>영화를 본영화에 추가했습니다.
+                                         </td>
+                                         <td>${activity.insertTs}</td>
+                                      </c:when>
+                                      <c:when test="${code eq '3'}">
+                                         <td>
+                                            <a class='activity_a' href='/mypage/main?userid=${activity.userid}'>${activity.nickname}</a>님이 
+                                            <a class='activity_a' href='/film/${activity.filmid}'>${activity.title}</a>영화를 볼영화에 추가했습니다.
+                                         </td>
+                                         <td>${activity.insertTs}</td>
+                                      </c:when>
+                                   </c:choose>
+                               </c:when>
+                           </c:choose>                           
+                                                
+                           
+                                                           
+                        </tr>
+                              </c:forEach>         
+                  </tbody>                  
+               </table>               
+            </div>                               
 
             </div>
 
@@ -233,15 +231,15 @@
                 <hr>
                 
                 <form id='form_pagination'>
-                	<input type='hidden' name='userid'>
+                   <input type='hidden' name='userid'>
                     <input type='hidden' name='currPage'>
                     <input type='hidden' name='amount'>
-                    <input type='hidden' name='pagesPerPage'>                    						
+                    <input type='hidden' name='pagesPerPage'>                                      
                     
                     <nav aria-label="Page navigation example">
                       <ul class="pagination">
                           <c:if test='${pageMaker.prev}'>
-                            <li class="page-item">						    
+                            <li class="page-item">                      
                               <a id='prev' class="page-link" href='${pageMaker.startPage - 1}' aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                               </a>
@@ -249,12 +247,12 @@
                         </c:if>
                         
                         <c:forEach begin='${pageMaker.startPage}' end='${pageMaker.endPage}' var='pageNum'>
-						    <li class="${pageMaker.criA.currPage == pageNum ? 'page-item active' : 'page-item'}">
-						    	<a class="page-link" href="/mypage/activity?userid=${pageMaker.criA.userid}&currPage=${pageNum}&amount=${pageMaker.criA.amount}&pagesPerPage=${pageMaker.criA.pagesPerPage}">${pageNum}</a>
-						    </li>
-						</c:forEach>
+                      <li class="${pageMaker.criA.currPage == pageNum ? 'page-item active' : 'page-item'}">
+                         <a class="page-link" href="/mypage/activity?userid=${pageMaker.criA.userid}&currPage=${pageNum}&amount=${pageMaker.criA.amount}&pagesPerPage=${pageMaker.criA.pagesPerPage}">${pageNum}</a>
+                      </li>
+                  </c:forEach>
 
-                        <c:if test='${pageMaker.next}'>	
+                        <c:if test='${pageMaker.next}'>   
                             <li class="page-item">
                               <a id='next' class="page-link" href='${pageMaker.endPage + 1}' aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
@@ -270,23 +268,9 @@
 
     </section>
 
-
-    <footer>
-        <div id="footer">
-            <a href="/main">
-                <img id="logoimg" src="/resources/img/filmeeLogo.png" alt="LOGO">
-            </a>
-            <div id="pageinfo">
-                <p>
-                    서울특별시 강남구 <br> 
-                    010-9876-5432<br>
-                    abcedferasdavazsdfzsdf
-                </p>
-            </div>
-            <div id="bugreport">
-                <button>의견보내기</button>
-            </div>
-        </div>
-    </footer>
+    
+    <%@include file="/resources/html/footer.jsp" %>
+     
+    
 </body>
 </html>

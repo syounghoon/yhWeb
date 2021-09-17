@@ -384,7 +384,7 @@ p .icon-16.-inline {
   background: url(../svg/sprite.c475d153.svg) -630px -50px no-repeat;
 }
 
-. .film-stats {
+.film-stats {
   clear: both;
   display: block;
   position: relative;
@@ -1649,9 +1649,9 @@ body.in-app .site-body {
   color: #fff;
   border-bottom: 1px solid #fff;
 }
-/* .tabbed-content-block {
+ /* .tabbed-content-block {
   display: none;
-} */
+}  */
 .tabbed-content-block:first-child {
   display: block;
 }
@@ -3045,7 +3045,7 @@ p.optional-add .modal-link {
   color: #def;
   max-width: 28em;
 }
-#confirm-modal .buttons {
+#confirm-modal .buttons { 
   margin-bottom: 0;
   overflow: hidden;
 }

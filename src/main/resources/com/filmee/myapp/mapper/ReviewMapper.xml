@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.filmee.myapp.mapper.ReviewMapper">
+
+    <select id="getList" resultType="com.filmee.myapp.domain.ReviewUserVO">
+		 <![CDATA[ 
+        SELECT R.rno, R.film_id, R.writer, R.rate,
+                       R.CONTENT, R.insert_ts, R.update_ts, R.delete_ts,
+                       R.like_cnt, u.user_id, u.nickname
+		FROM fm_review R 
+		INNER JOIN fm_user u ON( R.writer=u.user_id)       
+  		ORDER BY R.rno DESC       
+        OFFSET (#{currPage}-1) * #{amount} ROW
+        FETCH NEXT #{amount} ROWS ONLY
+		]]>
+    </select>
+
+    <select id="select" resultType="com.filmee.myapp.domain.ReviewUserVO">
+      <![CDATA[ 
+          SELECT R.rno, R.film_id, R.writer, R.rate,
+                 R.CONTENT, R.insert_ts, R.update_ts, R.delete_ts,
+                 R.like_cnt, u.user_id, u.nickname
+        FROM fm_review R, fm_user u 
+        WHERE R.writer=u.user_id
+        AND rno=#{rno}
+      ]]>
+    </select>
+
+    <insert id="insertSelectKey">
+      <selectKey keyProperty="rno" order="BEFORE" resultType="int">
+        SELECT ISEQ$$_100784.nextval FROM dual
+      </selectKey>
+      <![CDATA[ 
+        INSERT INTO fm_review(writer, content)
+        VALUES(#{writer}, #{content})
+      ]]>
+    </insert>
+
+    <update id="update">
+      <![CDATA[ 
+        UPDATE fm_review
+        SET CONTENT=#{content}, update_ts=current_date
+        WHERE rno=#{rno}
+      ]]>
+    </update>
+
+    <delete id="delete">
+      <![CDATA[ 
+        UPDATE fm_review
+        SET delete_ts=current_date
+        WHERE rno=#{rno}
+      ]]>
+    </delete>
+
+    <select id="getTotalCount" resultType="int">
+
+      SELECT count(rno)
+      FROM fm_review
+   	  WHERE film_id= {film_id}
+    </select>
+    
+
+    <update id="commentCnt" parameterType="int">
+      UPDATE fm_review 
+      SET comment_cnt = comment_cnt + #{amount}
+      WHERE rno=#{rno}
+    </update>
+
+   	<!-- fm_review_liked에 반영  -->
+    <update id="likeCheck">
+        UPDATE fm_review_liked
+        SET code = 1
+        WHERE rno=#{rno}
+        AND userid=#{userid}
+    </update>
+    
+    <!-- fm_review에 반영  -->
+      <update id="likeCheckTotal">
+        UPDATE fm_review
+        SET like_cnt = +1
+        WHERE rno=#{rno}
+    </update>
+ 
+    
+</mapper>

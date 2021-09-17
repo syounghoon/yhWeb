@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.filmee.myapp.mapper.FilmMapper">
-
     <select id="selectFilmInfo" resultType="com.filmee.myapp.domain.FilmVO">
     
 	SELECT *
@@ -16,10 +13,9 @@
     
     <select id="selectFilmPeople" resultType="com.filmee.myapp.domain.FilmPeopleVO">
     
-
- 	SELECT 
+    SELECT 
         P.ENNAME,FP.*
-    FROM FM_FILM_PEOPLE FP,  FM_PEOPLE P 
+    FROM FM_FILM_PEOPLE FP, FM_PEOPLE P 
     WHERE FP.PEOPLE_ID = P.PEOPLE_ID
     AND FP.FILM_ID = #{FILM_ID}
     ORDER BY FP.CREDIT_ORDER
@@ -31,34 +27,46 @@
 	FROM FM_GENRE G
 	WHERE G.FILM_ID = #{FILM_ID}
     </select>
-
-	<insert id="insert">
+<!-- 	<insert id="insert">
         INSERT INTO FM_REVIEW (film_id, writer, rate, content, watched_date, is_spoiled)
         VALUES(#{film_id}, #{writer}, #{rate}, #{content}, #{watched_date, jdbcType=VARCHAR}, #{is_spoiled})
-	</insert>
-
-
+	</insert>  -->
 	
+   	<insert id="insert">  <!-- 이거말고 url에서 값 가져오는걸로?  -->
+   <!--  	<selectKey keyProperty="film_id" order="AFTER" resultType="int">
+          SELECT film_id from fm_review where rno =#{rno} 
+        </selectKey>  -->
+        
+         <selectKey keyProperty="rno" order="BEFORE" resultType="int">
+            SELECT ISEQ$$_100784.nextval FROM dual
+        </selectKey>
+
+     INSERT INTO FM_REVIEW (film_id, writer, rate, content)
+        VALUES(#{film_id}, #{writer}, #{rate}, #{content}) 
+        
+    </insert>  
+
 	<select id="select" resultType="com.filmee.myapp.domain.ReviewFilmUserVO">
-	
+
 	SELECT 
-     R.*, F.title, F.original_title, F.release_date,'YYYY', F.poster_path, u.nickname
+     R.rno, R.film_id, R.writer, R.rate,R.CONTENT, R.insert_ts, R.update_ts, R.delete_ts, R.like_cnt, F.title, F.original_title, F.release_date,'YYYY', F.poster_path, u.nickname
 	FROM fm_review R, fm_film F, fm_user u
     WHERE R.film_id = F.film_id
     AND R.writer = u.user_id
 	AND R.rno = #{RNO}
-	
+
 	</select>
-	
+
     <select id="selectList" resultType="com.filmee.myapp.domain.ReviewFilmUserVO">   
-    
+
    	SELECT 
-     R.*, F.title, F.original_title, F.release_date,'YYYY', F.poster_path, u.nickname
+      R.rno, R.film_id, R.writer, R.rate,R.CONTENT, R.insert_ts, R.update_ts, R.delete_ts, R.like_cnt, 
+    F.title, F.original_title, F.release_date,'YYYY', F.poster_path, u.nickname
 	FROM fm_review R, fm_film F, fm_user u
     WHERE R.film_id = F.film_id
     AND R.writer = u.user_id
 	AND R.film_id = #{film_id}
-    ORDER BY R.insert_ts DESC     
+    ORDER BY R.insert_ts DESC        
 <!--      SELECT /*+ index_desc(fm_review) */ *
      FROM fm_review
      WHERE FILM_ID = #{FILM_ID} -->
@@ -75,9 +83,7 @@
         film_id = #{film_id},
         writer = #{writer},
         rate = #{rate},
-        CONTENT = #{content},
-        WATCHED_DATE = #{watched_date, jdbcType=VARCHAR},        
-        is_spoiled = #{is_spoiled},
+        CONTENT = #{content},       
         update_ts = current_date
     WHERE
         rno = #{rno}
@@ -91,6 +97,7 @@
                        R.CONTENT, R.INSERT_TS, R.UPDATE_TS, R.DELETE_TS,
                        R.WATCHED_DATE, R.IS_SPOILED, R.LIKE_CNT,
                        F. TITLE, F.ORIGINAL_TITLE, F. RELEASE_DATE, F.POSTER_PATH,
+                       R.LIKE_CNT,F. TITLE, F.ORIGINAL_TITLE, F. RELEASE_DATE, F.POSTER_PATH,
                        U.NICKNAME 
               FROM fm_review R, fm_film F, fm_user U 
                WHERE R.film_id = F.film_id
@@ -106,6 +113,56 @@
         FROM fm_review
         WHERE film_id =#{film_id}
     </select>
+
+
+    <!-- 리뷰 좋아요-->
+	<insert id="likeInsert" >  
+        INSERT INTO fm_review_liked(rno,userid) 
+        VALUES(#{rno}, #{userid})
+    </insert>
+
+	<!-- fm_review_liked에 반영  -->
+    <update id="likeCheck">
+        UPDATE fm_review_liked
+        SET code = 1
+        WHERE rno=#{rno}
+        AND userid=#{userid}
+    </update>
+
+    <!-- fm_review에 반영  -->
+      <update id="likeCheckTotal">
+        UPDATE fm_review
+        SET like_cnt = +1
+        WHERE rno=#{rno}
+    </update>
+
+    <update id="likeUncheck">
+        UPDATE fm_review_liked
+        SET likecheck=0
+        WHERE rno=#{rno}
+        AND userid=#{userid}
+    </update>
+
+    <select id="check" resultType="com.filmee.myapp.domain.ReviewFilmUserVO">
+        SELECT *
+        FROM fm_review
+        WHERE rno=#{rno}
+        AND userid=#{userid}
+    </select>
+
+    <select id="likeCnt" resultType="int">
+        SELECT *
+        FROM fm_like
+        WHERE rno=#{rno}
+        AND likecheck=1
+    </select>
+
+
+<!--   <update id="commentCnt" parameterType="int">
+      UPDATE fm_review_liked
+      SET comment_cnt = comment_cnt + #{amount}
+      WHERE rno=#{rno}
+    </update> -->
 
 
 </mapper>

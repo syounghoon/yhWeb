@@ -14,5 +14,4 @@ public class UserDTO {
 	private String salt;
 	private String authCode;
 	
-
 }//end class

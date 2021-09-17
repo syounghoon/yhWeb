@@ -18,7 +18,7 @@ import com.filmee.myapp.domain.FilmGenreVO;
 import com.filmee.myapp.domain.FilmPeopleVO;
 import com.filmee.myapp.domain.FilmVO;
 import com.filmee.myapp.domain.ReviewFilmUserVO;
-import com.filmee.myapp.domain.ReviewVO;
+import com.filmee.myapp.domain.ReviewDTO;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -89,11 +89,20 @@ public class FilmMapperTests {
 	public void testInsert() {
 		log.debug("testInsert() invoked.");
 
-		ReviewVO newReview = new ReviewVO(null, 577922, 2, 3.5, "재밌어요", null, null, null, null, 'f', null);
+		ReviewDTO review = new ReviewDTO();
 
-		int affectedLines = this.mapper.insert(newReview);
+//		ReviewDTO newReview = new ReviewDTO(null, 
+//				577922,
+//				2, 
+//				3.5, 
+//				"졸리다",
+//				null,  null, null,
+//				'f',
+//				null);
+
+		int affectedLines = this.mapper.insert(review);
 		log.info("\t+ affectedLines: " + affectedLines);
-		log.info("\t+ newReview: " + newReview);
+		log.info("\t+ newReview: " + review);
 
 	} // testInsert
 
@@ -134,17 +143,20 @@ public class FilmMapperTests {
 		log.debug("testUpdate() invoked.");
 		
 
+		ReviewDTO review = new ReviewDTO();
+
 		// 기존 리뷰를 변경(업데이트)함.
-		ReviewVO review = new ReviewVO(
-				126,
-				577922,
-				3,
-				5.0,
-				"또봐도재밌네....11",
-				null,null,null,
-				null,
-				'F', null
-		);
+//		ReviewDTO review = new ReviewDTO(
+//				126,
+//				577922,
+//				3,
+//				5.0,
+//				"또봐도재밌네....22",
+//				null,null,
+//				null,
+//				'F', null
+//				
+//		);
 
 		int updatedReview = this.mapper.update(review);
 		log.info("\t+ updatedReview: " + updatedReview);

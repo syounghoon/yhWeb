@@ -74,4 +74,15 @@ public class JoinServiceTests {
 		log.info("affectedLines : {}", isAuthorized);
 	}//updateAuthCodeNull
 	
+	@Test
+	public void testDeleteAccount() throws Exception{
+		log.debug("testDeleteAccount() invoked");
+		
+		Integer userId = 228;
+		int affectedLines = this.service.deleteAccount(userId);
+		
+		log.info(affectedLines);
+		
+	}//testDeleteAccount
+	
 }//end class
