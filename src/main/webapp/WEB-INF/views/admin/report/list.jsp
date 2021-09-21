@@ -37,28 +37,27 @@
                 paginationForm.submit();
             })//onclick
 
+            $("#modalReportBtn").on('click',function(){
+                console.log("complete clicked.");
+                
+                if(confirm("신고요청을 처리하시겠습니까?")){
+                    $("#user_sus_form").attr("action", "/admin/report/complete");
+                    $("#user_sus_form").submit();
+
+                    return true;
+
+                } else{
+                    return false;
+                        
+                }//if-else
+            })//modalreportbtn
 
         })//jq
-        function reportComplete(rptno, mgr_id,callback,error){
-            $.ajax({
-                type:'post',
-                url:'/admin/report/complete/'+rptno+"/"+mgr_id,
-                success: function(result, status, xhr){
-                    if(callback){
-                        callback(result);
-                    }//if
-                }, //success
-                error: function(xhr,status,er){
-                    if(error){
-                        error(er);
-                    }//of
-                }//error
-            })//ajax
-        }//reportComplete
-
-        function detail(rptno, code, accuser, content, suspect){
+        
+        function detail(rptno, code, accuser, content, suspect, complete_ts, sus_period){
             var detail=$('#detailmodal')
-            console.log("detail>> " + rptno); 
+            console.log("detail>> " + rptno);
+
             if(code==1){
                 $('#reportcode').attr("value", "욕설/비방");
             } else if (code==2){
@@ -72,23 +71,38 @@
             $('#reportaccuser').attr("value", accuser);
             $('#reportcontent').attr("value", content);
             $('#reportsuspect').attr("value", suspect);
+            
+            $("#sus_period").val(sus_period);
 
-            $(detail).modal("show");
-
+            if(complete_ts.length != 0){
+                $("#sus_period").attr("readonly", "readonly");
+                $("#modalReportBtn").prop("disabled", true);
+            }
+            else{
+                $("#sus_period").removeAttr("readonly");
+                $("#modalReportBtn").prop("disabled", false);
+            }
+            
             var mgrid="${__LOGIN__.userId}"
-            $("#modalReportBtn").on('click',function(){
-                console.log("complete clicked.");
-                if(confirm("신고요청을 처리하시겠습니까?")){
-  
-                    reportComplete(rptno, mgrid, function(result){
-	                    $("#detailmodal").on('hidden.bs.modal', function(){           
-		                    location.reload();  
-	                    });//social join on hidden
-                    })//reportComplete
-                } else{
-                	return false;
-                }//if-else
-            })//modalreportbtn
+            
+            console.log("rptno :", rptno);
+            var rptnoInput = document.createElement("input");
+            rptnoInput.setAttribute("type", "hidden");
+            rptnoInput.setAttribute("name", "rptno");
+            rptnoInput.setAttribute("value", rptno);
+            
+            console.log("mgrId :", mgrid);
+            var mgrIdInput = document.createElement("input");
+            mgrIdInput.setAttribute("type", "hidden");
+            mgrIdInput.setAttribute("name", "mgrId");
+            mgrIdInput.setAttribute("value", mgrid);
+            
+            var susForm = document.getElementById("user_sus_form");
+            susForm.appendChild(rptnoInput);
+            susForm.appendChild(mgrIdInput);
+            
+            $(detail).modal("show");        
+                    
         }//detail
     </script>
 
@@ -269,7 +283,7 @@
                                         </td>
                                         <td>${report.nickname}(${report.mgr_id})</td>
                                         <td>
-                                            <button onclick="detail('${report.rptno}', '${report.code}', '${report.accuser}', '${report.content}', '${report.suspect}')" type="button" id='detailbtn'>상세확인</button>
+                                            <button onclick="detail('${report.rptno}', '${report.code}', '${report.accuser}', '${report.content}', '${report.suspect}', '${report.complete_ts}', '${report.sus_period}')" type="button" id='detailbtn'>상세확인</button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -308,7 +322,6 @@
             </div>
         </div>
     </div>
-    <%@ include file="/resources/html/footer.jsp" %>
 
     <!-- Detail Modal -->
     <div class="modal fade" id="detailmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -319,30 +332,32 @@
                     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                 </div>
                 <div class="modal-body">
-                    <div>
-                        <label for="reportcode">신고유형</label>
-                        <input class="form-control" name="reportcode" id="reportcode" value="${report.code}" readonly>
-                    </div>
-                    <div class="form-group">
-                        신고자 <input class="form-control" name="nickname" id="reportaccuser" value="${report.accuser}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="reportcontent">내용</label>
-                        <input type="text" name="rContent" class="form-control" cols="44" rows="5" id="reportcontent" value="${report.content}" readonly>
-                    </div>      
-                    <div class="form-group">
-                        <label>신고대상</label>
-                        <input class="form-control" name="suspect" id="reportsuspect" value="신고당한유저아이디" readonly> 
-                    </div>
-                    <div>
-                        <label for="mgrid">현재 처리할 관리자</label>
-                        <input class="form-control" type="text" id="mgrid" value="${__LOGIN__.nickname}" readonly>
-                    </div>
-                    <div>
-                        <br>
-                        <label for="susto">회원정지일수</label>
-                        <input type="number" min="0" max="999999" required>
-                    </div>
+                    <form id="user_sus_form" action="#" method="POST">
+                        <div>
+                            <label for="reportcode">신고유형</label>
+                            <input class="form-control" name="reportcode" id="reportcode" value="${report.code}" readonly>
+                        </div>
+                        <div class="form-group">
+                            신고자 <input class="form-control" name="nickname" id="reportaccuser" value="${report.accuser}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportcontent">내용</label>
+                            <input type="text" name="rContent" class="form-control" cols="44" rows="5" id="reportcontent" value="${report.content}" readonly>
+                        </div>      
+                        <div class="form-group">
+                            <label>신고대상</label>
+                            <input class="form-control" name="suspect" id="reportsuspect" value="신고당한유저아이디" readonly> 
+                        </div>
+                        <div>
+                            <label for="mgrid">현재 처리할 관리자</label>
+                            <input class="form-control" type="text" id="mgrid" value="${__LOGIN__.nickname}" readonly>
+                        </div>
+                        <div>
+                            <br>
+                            <label for="susto">회원정지일수</label>
+                            <input type="number" id="sus_period" name="susPeriod" min="0" max="999999" required>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
@@ -351,5 +366,8 @@
             </div>
         </div>
     </div>
+
+    <%@ include file="/resources/html/footer.jsp" %>
+
 </body>
 </html>

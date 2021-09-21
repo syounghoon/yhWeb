@@ -8,15 +8,15 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	
-	<groupId>comt.filmee</groupId>
+	<groupId>com.filmUs</groupId>
 	<artifactId>myapp</artifactId>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	
 	<packaging>war</packaging>
 	
-	<name>filmee</name>
-    <url>filmee.com</url>
-	<description>filmee project</description>
+	<name>filmUs</name>
+    <url>filmUs</url>
+	<description>filmUs Project</description>
 	
 
 	<properties>
@@ -42,13 +42,10 @@
 		    <version>2.3.1</version>
 		</dependency>
 		
-	
-	
-		<!-- aws-java-sdk-s3 -->
 
 		<!-- ============= S3 ============= -->
 		
-		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3 -->
+		<!-- aws-java-sdk-s3 -->
 
 		<dependency>
 		    <groupId>com.amazonaws</groupId>
@@ -57,8 +54,6 @@
 		</dependency>
 
 		
-	
-	
 		<!-- spring-cloud-starter-aws -->
 		<dependency>
 		    <groupId>org.springframework.cloud</groupId>
@@ -109,9 +104,7 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${org.slf4j-version}</version>
-		</dependency>
-		
-		
+		</dependency>	
 
 	
 	    <!-- ================== multipart =============== -->

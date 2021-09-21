@@ -210,8 +210,6 @@ $(function() {
 			$("#forgot_pw").modal('hide');
 			alertModalMessaging("이메일 주소를 입력하세요.");
 
-		
-
 		} else if(!isEmail(email)){
 			$("#forgot_pw").modal('hide');
 			alertModalMessaging("옳바른 이메일 형식이 아닙니다.");
@@ -281,7 +279,7 @@ $(function() {
 					
 					switch(data.loginNum){
 						case '1' :
-							console.log("longinNum : 1");
+							console.log("loginNum : 1");
 							$("#login").modal("hide");
 
 							alertModalMessaging("등록되지 않은 이메일 혹은 비밀번호입니다.");
@@ -289,7 +287,7 @@ $(function() {
 							break;
 							
 						case '2':
-							console.log("longinNum : 2");
+							console.log("loginNum : 2");
 							$("#login").modal("hide");
 
 							alertModalMessaging("이메일 인증 후 로그인 가능합니다.");
@@ -303,8 +301,23 @@ $(function() {
 
 							break;
 
-							case '3':
-								console.log("longinNum : 3");
+							case '3' :
+								console.log("loginNum : 3");
+								$("#login").modal("hide");
+
+								alertModalMessaging(data.susTo+"까지 정지된 계정입니다.");
+
+								if(uriCookie != null){   
+									alertModalEl.addEventListener('hidden.bs.modal',function(){
+										deleteCookie("__ORIGINAL_REQUEST_URI__");
+										history.go(-1);
+									});//modal close listener
+								}//if
+	
+								break;
+
+							case '4':
+								console.log("longinNum : 4");
 								
 							if(data.isRememberMe == 'true'){    //RemeberMe 체크하고 로그인 했을 시
 								//RemberMe 쿠키의 이름과 값, 유효기간 설정
@@ -374,7 +387,7 @@ $(function() {
 			alert('error');
 			console.log(error);
 		}
-	});//Kakao.Auth.lgoin
+	});//Kakao.Auth.createLoginButton
 
 	//logout 누를시
 	$("#logout_a").on('click', function(){

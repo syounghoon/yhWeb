@@ -16,75 +16,75 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.3.2/jquery-migrate.min.js"></script>
 
     <script>
+
+        function open_admin_modal(userId, isAdmin){
+            console.debug("open_modal_a clicked");
+            console.log("userId : ", userId);
+            console.log("isAdmin : ", isAdmin);
+
+            
+            var userIdInput = document.createElement("input");
+            userIdInput.setAttribute("type", "hidden");
+            userIdInput.setAttribute("name", "userId");
+            userIdInput.setAttribute("value", userId);
+            
+            var isAdminInput = document.createElement("input");
+            isAdminInput.setAttribute("type", "hidden");
+            isAdminInput.setAttribute("name", "isAdmin");
+            isAdminInput.setAttribute("value", isAdmin);
+            
+            var changeIsAdmiForm = document.getElementById("change_isAdmin_form");
+            changeIsAdmiForm.appendChild(userIdInput);
+            changeIsAdmiForm.appendChild(isAdminInput);
+            
+            changeIsAdmiForm = $('#change_isAdmin_form');
+            changeIsAdmiForm.find('input[name=currPage]').val('${pageMaker.cri.currPage}' );
+            changeIsAdmiForm.find('input[name=amount]').val( '${pageMaker.cri.amount}' );
+            changeIsAdmiForm.find('input[name=pagesPerPage]').val( '${pageMaker.cri.pagesPerPage}' );
+            changeIsAdmiForm.find('input[name=type]').val( '${pageMaker.cri.type}' );
+            changeIsAdmiForm.find('input[name=keyword]').val( '${pageMaker.cri.keyword}' );
+            changeIsAdmiForm.find('input[name=category]').val( '${pageMaker.cri.category}' );
+
+            $("#change_isAdmin_form p").text(userId+"번 회원의 관리자 설정을 변경하시겠습니까?");
+            
+            $("#admin_modal").modal("show");
+        }//open_admin_modal
+
         $(function(){
             console.clear();
             console.log("jq started");
 
-            $('a.prev,a.next').on('click', function(e){
-                console.debug("on clicked for NEXT or PREV");
-                console.log('\t+this:',this);
+            $('a.prev, a.next').on('click', function(e) {
+                console.debug("onclicked for a.next or a.prev");
+                console.log('\t+ this : ', this);
+
                 e.preventDefault();
 
                 var paginationForm = $('#paginationForm');
 
-                paginationForm.attr('action', '/admin/report/list');
+                paginationForm.attr('action', '/admin/user');
                 paginationForm.attr('method', 'GET');
 
-                paginationForm.find('input[name=currPage]').val($(this).attr('href'));
-                paginationForm.find('input[name=amount]').val('${pageMaker.cri.amount}');
-                paginationForm.find('input[name=pagesPerPage]').val('${pageMaker.cri.pagesPerPage}');
+                paginationForm.find('input[name=currPage]').val($(this).attr('href') );
+                paginationForm.find('input[name=amount]').val( '${pageMaker.cri.amount}' );
+                paginationForm.find('input[name=pagesPerPage]').val( '${pageMaker.cri.pagesPerPage}' );
 
                 paginationForm.submit();
-            })//onclick
+            });//onclick a.prev, a.next
 
 
+            $('#admin_user_search_submit').on('click',function(e){
+                e.preventDefault();
+
+                var adminUserSearchForm = $('#admin_user_search_form');
+
+                adminUserSearchForm.find('input[name=amount]').val( '${pageMaker.cri.amount}' );
+                adminUserSearchForm.find('input[name=pagesPerPage]').val( '${pageMaker.cri.pagesPerPage}' );
+
+                adminUserSearchForm.submit();
+            });//onclick admin_user_search_submit
+   
         })//jq
-        function reportComplete(rptno, mgr_id,callback,error){
-            $.ajax({
-                type:'post',
-                url:'/admin/report/complete/'+rptno+"/"+mgr_id,
-                success: function(result, status, xhr){
-                    if(callback){
-                        callback(result);
-                    }//if
-                }, //success
-                error: function(xhr,status,er){
-                    if(error){
-                        error(er);
-                    }//of
-                }//error
-            })//ajax
-        }//reportComplete
-
-        function detail(rptno, code, accuser, content, suspect){
-            var detail=$('#detailmodal')
-            console.log("detail>> " + rptno);            
-
-            $('#reportcode').attr("value", code);
-            $('#reportaccuser').attr("value", accuser);
-            $('#reportcontent').attr("value", content);
-            $('#reportsuspect').attr("value", suspect);
-
-            $(detail).modal("show");
-
-            var mgrid="${__LOGIN__.userId}"
-            $("#modalReportBtn").on('click',function(){
-                console.log("complete clicked.");
-                if(confirm("신고요청을 처리하시겠습니까?")){
-  
-                    reportComplete(rptno, mgrid, function(result){
-                        $('#detailmodal').modal("hide");
-                        let formobj=$('form');
-                            formobj.attr('action','/admin/report/list');
-                            formobj.attr('method','get');
-                            formobj.submit();
-                    })
-
-                } else{
-                	return false;
-                }//if-else
-            })//
-        }
     </script>
 
 
@@ -102,21 +102,27 @@
             width: 998px;
             margin: 0 auto;
         }
-        /* #admincontainer{
-            float: right;
-            width: 840px;
-        } */
         #container{
-        	margin-bottom: 50px;
+        	width:998px;
+        	margin: 0 auto;
         }
-                
+        #userStatus{
+            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+   		#userStatus>ul>li{
+   			display: inline;
+            font-size: 18px;
+            text-align: center;
+   		}   		               
         #menu{
         	font-size: 40px;
         	width: 998px;
         	margin: 0 auto;
         	text-align: center;
         }
-		#adminboardlist {
+		#adminuserlist {
 			width: 998px;
 			margin: 0 auto;
 		    text-align: center;
@@ -126,7 +132,7 @@
             border-bottom: 1px solid rgb(224, 224, 224);	
 
         }
-		#adminboardlist>tbody>tr>td{
+		#adminuserlist>tbody>tr>td{
 		  	color: black;
 		  	font-size:15px;
 		  	padding: 15px;
@@ -151,8 +157,12 @@
             text-align: center;
             margin-bottom: 10px;
         }
-        #adminboardlist>tbody>tr:hover {
+        #adminuserlist>tbody>tr:hover {
   		  	background-color: #dddddd60;
+        }
+        td{
+        	overflow: hidden;
+        	text-overflow: ellipsis;
         }
         #beforeComplete{
             color: rgb(192, 192, 192)
@@ -170,7 +180,7 @@
         #pageNumber>li:hover{
             background-color: rgb(224, 224, 224);
         }
-        #detailbtn{
+        /* #detailbtn{
             border-radius: 5px; 
             margin-right:-4px;
             border: 1px solid skyblue; 
@@ -181,7 +191,7 @@
         #detailbtn:hover{ 
             color:rgb(221, 250, 255);
             background-color: rgb(0, 0, 0); 
-        }
+        } */
 		.prev, .next{
 			font-size: 20px;
 		}
@@ -192,6 +202,9 @@
             border-radius: 10%;
             font-size: 15px;
         }
+        #div_ausf{
+            margin: 30px 0 70px 315px;
+        }
 
     </style>
 </head>
@@ -201,69 +214,63 @@
         <div>
             <div id="adminmenuinfo">관리자 전용</div>
             <div id=menu>
-            	<h2>신고 현황</h2>
+            	<h2>회원 현황</h2>
                 <%@include file="../menu.jsp"%>
             </div>
         </div>
         <div id="admincontainer">
             
             <div>
+                <div id='userStatus'>
+                    <ul>
+                        <li><a href="/admin/user?category=T&currPage=1&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">
+                            총 회원 수 : ${count.total}명</a> | </li>
+                        <li><a href="/admin/user?category=A&currPage=1&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">
+                            총 활동 회원 수 : ${count.acc}명</a> | </li>
+                        <li><a href="/admin/user?category=S&currPage=1&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">
+                            총 정지 회원 수 : ${count.acc_suspended}명</a> | </li>
+                        <li><a href="/admin/user?category=D&currPage=1&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">
+                            총 탈퇴 회원 수 : ${count.acc_deleted}명</a></li>
+                    </ul>
+                </div>
+                
+
                 <div>
-                    <table id="adminboardlist">
-                        <colgroup>
-                            <col width="8%"/>
-                            <col width="10%"/>
-                            <col width="12%"/>
-                            <col width="10%"/>
-                            <col width="20%"/>
-                            <col width="10%"/>
-                            <col width="10%"/>
-                            <col width="10%"/>
-                        </colgroup>
+                    <table id="adminuserlist">
                         <thead>
-                            <tr id=listline>
+                            <tr id='listline'>
                                 <th>No.</th>
-                                <th>유형</th>
-                                <th>신고자</th>
-                                <th>항목</th>
-                                <th>접수일</th>
-                                <th>처리일</th>
-                                <th>처리자</th>
-                                <th>확인</th>
+                                <th>이메일</th>
+                                <th>닉네임</th>
+                                <th>가입일</th>
+                                <th>정지기간</th>
+                                <th>탈퇴일</th>
+                                <th>관리자</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${list}" var="report" varStatus="vs">
-                                    <tr>
-                                        <td>${report.rptno}</td>
+                            <c:forEach items="${list}" var="user" varStatus="vs">
+                                    <tr><td>${user.userId}</td> 
+                                        <td>${user.email}</td>
+                                        <td><a href="/mypage/main?userid=${user.userId}">${user.nickname}</a></td>
+                                        <td><fmt:formatDate pattern="yyyy/MM/dd" value="${user.joinTs}"/></td>
                                         <td>
-                                            <c:choose>
-                                                <c:when test="${report.code=='1'}">욕/비방</c:when>
-                                                <c:when test="${report.code=='2'}">스포일러</c:when>
-                                                <c:when test="${report.code=='3'}">광고</c:when>
-                                                <c:when test="${report.code=='4'}">기타</c:when>
-                                            </c:choose>
-                                        </td>
-                                        <td>${report.accuser}</td>
+                                            <c:if test="${user.susFrom==null}">
+												-
+											</c:if>                                           
+                                            <c:if test="${user.susFrom!=null}">
+                                            	<fmt:formatDate pattern="yyyy/MM/dd" value="${user.susFrom}"/> ~ <fmt:formatDate pattern="yyyy/MM/dd" value="${user.susTo}"/>
+                                            </c:if>                                  
+										</td>
                                         <td>
-                                            <c:choose>
-                                                <c:when test="${report.target_type=='BNO'||report.target_type=='bno'}"><admin class="forAdmin">게시판</admin></c:when>
-                                                <c:when test="${report.target_type=='BCNO'||report.target_type=='bcno'}"><admin class="forAdmin">게시판댓글</admin></c:when>
-                                                <c:when test="${report.target_type=='RNO'||report.target_type=='rno'}"><admin class="forAdmin">리뷰</admin></c:when>
-                                                <c:when test="${report.target_type=='RCNO'||report.target_type=='rcno'}"><admin class="forAdmin">리뷰댓글</admin></c:when>
-                                            </c:choose>
-                                        </td>
-                                        <td><fmt:formatDate pattern="yyyy/MM/dd" value="${report.insert_ts}"/></td>
-                                        <td>
-                                            <c:if test="${report.complete_ts==null}">
-                                                <beforeCom id="beforeComplete">처리전</beforeCom>
-                                            </c:if>
-                                            <fmt:formatDate pattern="yyyy/MM/dd" value="${report.complete_ts}"/>
-                                        </td>
-                                        <td>${report.mgr_id}</td>
-                                        <td>
-                                            <button onclick="detail('${report.rptno}', '${report.code}', '${report.accuser}', '${report.content}', '${report.suspect}')" type="button" id='detailbtn'>상세확인</button>
-                                        </td>
+                                            <c:if test="${user.deleteTs==null}">
+												-
+											</c:if>                                           
+                                            <c:if test="${user.deleteTs!=null}">
+                                        		<fmt:formatDate pattern="yyyy/MM/dd" value="${user.deleteTs}"/>
+											</c:if>
+										</td>                                     
+                                        <td><a href="#" onclick="javascript:open_admin_modal('${user.userId}', '${user.isAdmin}')">${user.isAdmin}</a></td>                      
                                     </tr>
                                 </c:forEach>
                             </tbody>
@@ -277,7 +284,7 @@
         
                         <ul id="pageNumber">
                             <c:if test="${pageMaker.prev}">
-                                <li class="prev"><a class="prev" href="${pageMaker.startPage-1}"> < </a></li>
+                                <li class="prev"><a class="prev" href="${pageMaker.startPage-1}"></a></li>
                             </c:if>    
         
                             <c:forEach 
@@ -287,7 +294,7 @@
                                 <li class="${pageMaker.cri.currPage==pageNum?'currPage':''}">
                                     <a
                                         class="${pageMaker.cri.currPage==pageNum?'currPage':''}"
-                                        href="/admin/report/list?currPage=${pageNum}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">
+                                        href="/admin/user?category=${pageMaker.cri.category}&currPage=${pageNum}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}&type=${pageMaker.cri.type}&keyword=${pageMaker.cri.keyword}">
                                         ${pageNum}
                                     </a>    
                                 </li>
@@ -298,52 +305,48 @@
                         </ul>
                     </form>
                 </div>
+                <div id="div_ausf">
+                    <form id="admin_user_search_form" class="d-flex" action="/admin/user" method="GET">
+                      <input type='hidden' name='category' value="T">
+                      <input type='hidden' name='currPage' value='1' >
+                      <input type='hidden' name='amount'>
+                      <input type='hidden' name='pagesPerPage'>
+                          <select class="form-select" name="type" aria-label="Default select example" style="width: 130px">                            
+                              <option value="N" selected>Nickname</option>
+                              <option value="E">Email</option>                            
+                          </select>
+                            <input class="form-control me-2" type="search" name='keyword' placeholder="Search" aria-label="Search" style='width: 150px'>                                                                        
+                            <button id='admin_user_search_submit' class="btn btn-secondary" type="submit" style='width: 80px; font-size: 13px;'>Search</button>
+                      </form>
+                  </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="admin_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"> 
+                <form id="change_isAdmin_form" action="/admin/user/changeIsAdmin" method="POST">
+                    <div class="modal-body">
+                        <p style="font-size: 16px; text-align: center;"></p>
+                        <input type="hidden" name="currPage">
+                        <input type="hidden" name="amount">
+                        <input type="hidden" name="pagesPerPage">
+                        <input type="hidden" name="type">
+                        <input type="hidden" name="keyword">
+                        <input type="hidden" name="category">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary submit_form" data-bs-dismiss="modal">Change</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
     <%@ include file="/resources/html/footer.jsp" %>
 
-    <!-- Detail Modal -->
-    <div class="modal fade" id="detailmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><img src="/resources/img/siren.jpg" alt="" width="20px" height="20px"> 신고 상세 및 처리</h5>
-                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <label for="reportcode">신고유형</label>
-                        <input class="form-control" name="reportcode" id="reportcode" value="${report.code}" readonly>
-                    </div>
-                    <div class="form-group">
-                        신고자 <input class="form-control" name="nickname" id="reportaccuser" value="${report.accuser}" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="reportcontent">내용</label>
-                        <input name="rContent" class="form-control" cols="44" rows="5" id="reportcontent" value="${report.content}" readonly>
-                        <button type="button"><a href="/board/get?bno=">신고당한 컨텐츠 확인하기</a></button>
-                    </div>      
-                    <div class="form-group">
-                        <label>신고대상</label>
-                        <input class="form-control" name="suspect" id="reportsuspect" value="신고당한유저아이디" readonly> 
-                    </div>
-                    <div>
-                        <label for="mgrid">처리자</label>
-                        <input class="form-control" type="text" id="mgrid" value="${__LOGIN__.nickname}" readonly>
-                    </div>
-                    <div>
-                        <br>
-                        <label for="susto">회원정지일수</label>
-                        <input type="number" min="0" max="999999" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                    <button id='modalReportBtn' type="button" class="btn btn-danger" data-bs-dismiss="modal">처리완료</button>
-                </div> 
-            </div>
-        </div>
-    </div>
 </body>
 </html>

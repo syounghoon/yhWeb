@@ -19,7 +19,7 @@ pageEncoding="UTF-8" %>
 
 	<%@ include file="/resources/html/header.jsp" %>
   
-    <link href="/resources/css/letterboxd.css" rel="stylesheet" media="screen, projection" />
+<!--     <link href="/resources/css/letterboxd.css" rel="stylesheet" media="screen, projection" /> -->
     <script src="https://s.ltrbxd.com/static/js/main.min.ed93f370.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.3.2/jquery-migrate.min.js"></script>
@@ -33,32 +33,34 @@ pageEncoding="UTF-8" %>
     <script src="/resources/js/reviewReply.js"></script>
     <script src="/resources/js/reviewReport.js"></script>
     
+    <!-- 이렇게 삽입하면 아래에서 변수처럼 쓸 수 있다.   -->
+    
     
     <script>    
     	$(function(){
             console.log("========= COMMENT JS =======")
     		var rnoValue='<c:out value="${reviewFilmUserVO.rno}"/>';
             var nickname='<c:out value="${__LOGIN__.nickname}"/>' 
-            var userid='<c:out value="${__LOGIN__.userId}"/>'
+            var userId='<c:out value="${__LOGIN__.userId}"/>'
             var replyUL=$(".chat");    
-            var reviewwriter='<c:out value="${reviewFilmUserVO.writer}"/>'
+            var writer='<c:out value="${reviewFilmUserVO.writer}"/>'
             var modal = $(".modal"); 
             var modalInputReply=modal.find("input[name='content']");
             var modalInputReplyer=modal.find("input[name='writer']");
             var modalinputReplyDate=modal.find("input[name='insert_ts']");
-            var modalModBtn=$("#modalModBtn");
+            var modalModifyBtn=$("#modalModBtn");
             var modalRemoveBtn=$("#modalRemoveBtn");
             var modalRegisterBtn=$("#modalRegisterBtn");
             
          
-            console.log("userid:",userid);
+            console.log("userId:",userId);
             console.log("writer:",writer);
             if("${__LOGIN__.userId}"==writer){
                 $("#delete").show();
-                $("#modifyBtn").show();
+                $("#modify").show();
             } else{
                 $("#delete").hide();
-                $("#modifyBtn").hide();
+                $("#modify").hide();
                 if("${__LOGIN__}"==""){
                     $("#addReplyBtn").hide()
                     $("#reportBtn").hide()
@@ -97,7 +99,7 @@ pageEncoding="UTF-8" %>
                      location.href="/film/${reviewFilmUserVO.film_id}/review/${reviewFilmUserVO.rno}"
                 })
             }
-            showList(1);
+             showList(1);
             function showList(page){
                 console.log("showList ! : nick:",nickname)
                 replyService.getList({rno:rnoValue,page:page||1},function(list){
@@ -118,7 +120,7 @@ pageEncoding="UTF-8" %>
                         // str+="          <button type='button' id='reportBtn'> <img src='/resources/img/siren.jpg' width='20px' height='20px'>신고</button>";
                         str+="          <samll class='pull-right text-muted' id='commentTs'>등록 "+replyService.displayTime(list[i].insert_ts)+" <c:if test='"+list[i].update_ts+"'><br>수정 "+replyService.displayTime(list[i].update_ts)+"</c:if>"+"</small>";
                         str+="      </div>"
-                        str+="<li class='left clearfix' data-bcno='"+list[i].bcno+"'>";
+                        str+="<li class='left clearfix' data-rcno='"+list[i].rcno+"'>";
                         str+="  <div>";
                         str+="      <p id='replycontent'>"+list[i].content+"</p>";
                         str+="   </div>";
@@ -151,79 +153,7 @@ pageEncoding="UTF-8" %>
                     showList(1);
                 })
             })//modalRegisterBtn
-            // $("#replycontent").css('cursor','pointer')
-            $(".chat").on("click","li",function(e){
-                console.log(" >> chat clicked.");
-                bcno=$(this).data("bcno");
-                console.log(".chat bcno:"+bcno);
-                replyService.get(bcno, function(reply){
-                    console.log(reply);
-                    modalInputReply.val(reply.content);
-                    modalInputReplyer.val(reply.nickname).attr("readonly","readonly");
-                    modalinputReplyDate.val(replyService.displayTime(reply.update_ts)).attr("readonly","readonly").hide();
-                    modal.data("bcno",reply.bcno);
-                    modal.find("button[id!='modalCloseBtn']");
-                    if("${__LOGIN__.userId}"==reply.writer){
-                        modalModBtn.show();
-                        modalRemoveBtn.show();
-                        replyComment.readOnly=false;
-                        
-                    }else{
-                        replyComment.readOnly=true;
-                        modalModBtn.hide();
-                        modalRemoveBtn.hide();
-                    }
-                    modalRegisterBtn.hide();
-                    $("#createComment").modal("show");
-                })
-            })
-            modalModBtn.on("click",function(e){
-                console.log("modalModBtn Clicked");
-            	var reply2={
-                    bcno:bcno, 
-                    content: modalInputReply.val()
-                };
-                console.log("reply2:"+reply2.bcno+ reply2.content)
-				replyService.update(reply2, function(result){
-                    alert("수정 되었습니다.");
-					modal.modal("hide");
-					showList(1);
-				})
-            })
-			modalRemoveBtn.on("click",function(e){
-                console.log("removeBtn clicked >> bcno:" +bcno);
-				replyService.remove(bcno, function(result){
-                    alert("삭제 되었습니다.");
-					modal.modal("hide");
-					showList(1);
-				})
-			})
-            $("#reportBtn").on("click",function(e){
-                console.log("reportBtn clicked>>")
-                $("#reportmodal").modal("show");
-            })
-            var modalReportCode=modal.find("select[name='reportcode']").val();
-            var modalAccuser=modal.find("input[name='reportwriter']").val();
-            var modalTargetType=modal.find("input[name='reporttype']").val();
-            var modalTarget=modal.find("input[name='reporttarget']").val();
-            var modalSuspect=modal.find("input[name='suspect']").val();
-            var modalReportContent=modal.find("textarea[name='rContent']");
-            $("#modalReportBtn").on("click",function(e){
-                console.log("modalReportBtn Clicked.");
-                var reportinfo={
-                    code: modalReportCode,
-                    accuser: modalAccuser,
-                    target_type: modalTargetType,
-                    target: modalTarget,
-                    suspect: modalSuspect,
-                    content: modalReportContent.val()
-                }
-                console.log("reportinfo: ", reportinfo);
-                reportService.send(reportinfo,function(result){
-                    alert("신고가 접수되었습니다.");
-                    modal.modal("hide");
-                })
-            })
+            
     	})//jq
         $(function(){
             console.debug('>>> jq started.');
@@ -231,9 +161,9 @@ pageEncoding="UTF-8" %>
                 console.log(" >>> listBtn button clicked");
                 location.href="/review/list?currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
             }) //on click
-            $("#modifyBtn").on('click',function(){
-                console.log(" >>> modifyBtn clicked");
-                location.href="/review/modify?rno=${review.rno}&currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}"
+            $("#modalRegisterBtn").on('click',function(){
+                console.log(" >>> modalRegisterBtn clicked");          
+            	location.href="/film/${reviewFilmUserVO.film_id}/review/${reviewFilmUserVO.rno}" 
             })//onclick
             $("#delete").on('click',function(){
                 console.log("delete clicked.");
@@ -373,18 +303,69 @@ pageEncoding="UTF-8" %>
         #isDeleteTs{
             margin-top: 300px;
             margin-left: 400px;
+            }
+            
+     * {
+            font-family: 'ELAND 초이스';
         }
+        
+    #diary-entry-submit-button{
+    
+        float: right;
+        margin-right: 50px;
+    }
+    #starbox{
+        float:left;
+        
+        } 
+              
+    .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+      justify-content: space-around;
+      padding: 0 0.2em;
+      text-align: center;
+      width: 5em;
+    }
+     
+    .star-rating input {
+      display: none;
+    }
+     
+    .star-rating label {
+      -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+      -webkit-text-stroke-width: 2.3px;
+      -webkit-text-stroke-color: #2b2a29;
+      cursor: pointer;
+    }
+     
+    .star-rating :checked ~ label {
+      -webkit-text-fill-color: gold;
+    }
+     
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      -webkit-text-fill-color: #fff58c;
+    }
+    
+    #frm-review{
+    height: 350px;
+    width: 350px;
+    }
+       
     </style>
 	
   </head>
 
   <body class="view">
-
+	
       <div class="site-header-bg"></div>
-      <section>
+<!--       <section>
         <div
           class="react-component"
-          data-component-class="globals.comps.NavComponent"></div>
+          data-component-class="globals.comps.NavComponent"></div> -->
 
  
     <div id="content" class="site-body">
@@ -419,24 +400,23 @@ pageEncoding="UTF-8" %>
                 data-on-load="csi-availability"
               ></div>
             </div>
-
+ 
             <section class="col-12 review">
               <section class="film-viewing-info-wrapper">
                 <header class="page-header overflow person-header">
                   <div class="person-summary -inline">
-                    <a class="avatar -a24" href="/${reviewFilmUserVO.writer}/">
-                      <img
-                        src="회원프로필사진"
+                    <a class="avatar -a24" href="/mypage/main?userid=${reviewFilmUserVO.writer}">
+                      <%-- <img src="https://younghoon.s3.ap-northeast-2.amazonaws.com/${reviewFilmUserVO.profile_photo_path}"
                         alt="${reviewFilmUserVO.writer}"
                         width="24"
                         height="24"
-                      />
-                    </a>
+                      /> --%>
+                    </a>  
                     <h1
                       class="title-4"
-                      itemprop="author">
-                   
-                      <a href="/${reviewFilmUserVO.nickname}/" itemprop="sameAs" class="name">
+                      itemprop="author"> 
+              
+                      <a href="/mypage/main?userid=${reviewFilmUserVO.writer}" itemprop="sameAs" class="name">
                         <span itemprop="name">${reviewFilmUserVO.nickname}님의 리뷰 </span>
                       </a>
                     </h1>
@@ -448,53 +428,28 @@ pageEncoding="UTF-8" %>
                 <h2 class="headline-2 prettify">
                   <span class="film-title-wrapper">
                     <a href="/film/${reviewFilmUserVO.film_id}/">${reviewFilmUserVO.title}</a>
-                    <small class="metadata"> <fmt:formatDate value="${reviewFilmUserVO.release_date}" pattern="yyyy" /></small>
+                   <%--  <small class="metadata"> <fmt:formatDate value="${reviewFilmUserVO.release_date}" pattern="yyyy" /></small> --%>
                   </span>
                   <span class="rating rating-large rated-large-10">
-                    ★★★★★
+                    <%-- ${reviewFilmUserVO.rate} --%>  ★★★★
                   </span>
                 </h2>
         
               </section>
 
-               <div class="review body-text -prose -hero -loose">
+             
                 <div>
-                  <h3 class="hidden">
-                    ${reviewFilmUserVO.nickname}의 리뷰:
-                  </h3>
-
                   <div>
                     <p>${reviewFilmUserVO.content}</p>
                   </div>
                 </div>
-              </div> 
 
-              <!--  <p
-                class="like-link-target react-component review-like -monotone"
-                data-component-class="globals.comps.LikeLinkComponent" 
-                data-likeable-name="review"
-                data-likeable="true"
-                data-format="svg"
-                data-owner="${reviewFilmUserVO.writer}"
-              >
-               <span class="svg-action -like"></span>
-              </p> -->
-        
-                <div
-                  id="report-member-${reviewVO.writer}-review-130509321"
-                  class="block-or-report-menu popmenu popup-menu"
-                  data-username="${reviewFilmUserVO.writer}"
-                >
-                  <ul>
-    
-                  </ul>
-                </div>
               </div>
         </div>
       </div>
    
-		<!-- 여기부터 현아꺼 참고한거 -->
-		<form action="/film/get">
+		
+		<form method="POST" action="/film/${reviewFilmUserVO.film_id}/review/${reviewFilmUserVO.rno}">
             <input type="hidden" name="rno" value="${reviewFilmUserVO.rno}">
             <input type="hidden" name="userId" value="${__LOGIN__.userId}">
             <input type="hidden" name="likecheck" value="${reviewVO.likecheck}">
@@ -502,7 +457,6 @@ pageEncoding="UTF-8" %>
             <div id="count">
                 <table>
                     <tr>
-                        <td><button id="reportBtn"><img src='/resources/img/siren.jpg' width='25px' height='25px'></button></td>
                         <td>
                             <c:if test="${__LOGIN__==null}">
                                 <img src="/resources/img/emptyheart.png" alt="좋아요" width="30px" height="30px">
@@ -514,14 +468,8 @@ pageEncoding="UTF-8" %>
                         </td>
                     </tr>
                     <tr>
-                        <c:if test="${__LOGIN__.userId != null}">
-                            <td>신고</td>
-                        </c:if>
-                        <c:if test="${__LOGIN__==null}">
-                            <td> </td>
-                        </c:if>
-                 
-                        <td> ${reviewFilmUserVO.like_cnt}</td>
+                        
+                        <td>${heartCnt}</td>
                     </tr>
                 </table>
             </div>
@@ -534,114 +482,78 @@ pageEncoding="UTF-8" %>
             </div>
             <hr>
             <div id="threeBtn">
-                <button type="button" id="modifyBtn" class="btn btn-outline-dark">수정</button>
-                <button type="button" id="delete" class="btn btn-outline-dark">삭제</button>
+                 <button type="button" id="modify" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modifyModal">
+                  수정 
+                  </button>
+				 <button type="button" id="delete" class="btn btn-outline-dark">삭제</button>
                 <button type="button" id="listBtn" class="btn btn-outline-dark">목록</button>
-            </div>
-   
+            </div>                  
 
-    <div class='row'>
-                <div class='col-lg-12'>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-comments fa-fw"></i><strong>댓글 목록</strong>
-                            <button type="button" id="addReplyBtn" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">새 댓글 쓰기</button>
-                            <hr>
-                            <!-- Modal -->
-                        </div>
-                        <div class="panel-body">
-                            <ul class="chat">
-                                <li class="left clearfix" data-bcno='89' >
-                                    <div>
-                                        <div class="header">
-                                            <strong class="primary-font"></strong>
-                                            <small class="pull-right text-muted"></small>
-                                        </div>
-                                        <p></p>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal -->
-            <div class="modal fade" id="createComment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  		         <!-- Modal -->
+            <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">댓글 작성</h5>
+                      <h5 class="modal-title" id="exampleModalLabel">${reviewFilmUserVO.original_title} 리뷰 수정하기</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="content">내용</label>
-                            <input id="replyComment" class="form-control" name='content' value='content'>
+                    
+                    
+                    <% 
+                    
+            	Integer writer = (Integer) session.getAttribute("userId");                   
+            
+                    %> 
+        
+<!--         <section class="col col-13 overflow expanded"> -->
+             <form method="POST" action="/film/${reviewFilmUserVO.film_id}/review/m/${reviewFilmUserVO.rno}">
+                
+                <input type="hidden" name="film_id" value="${reviewFilmUserVO.film_id}" id="frm-film-id">
+                <input type="hidden" name="writer" value="${__LOGIN__.userId}">
+                <input type="hidden" name="rno" value="${reviewFilmUserVO.rno}">
+                
+                
+
+                <fieldset>
+                    
+                    <div class="form-row">
+                        <textarea name="content" id="frm-review" class="field">${reviewFilmUserVO.content}</textarea>
+                    </div>
+                        
+                        
+                        <div id = "starbox">
+                         
+                         
+                         <div class="star-rating space-x-4 mx-auto">
+                            <input type="radio" id="5-stars" name="rate" value=5 v-model="ratings"/>
+                            <label for="5-stars" class="star pr-4">★</label>
+                            <input type="radio" id="4-stars" name="rate" value=4 v-model="ratings"/>
+                            <label for="4-stars" class="star">★</label>
+                            <input type="radio" id="3-stars" name="rate" value=3 v-model="ratings"/>
+                            <label for="3-stars" class="star">★</label>
+                            <input type="radio" id="2-stars" name="rate" value=2 v-model="ratings"/>
+                            <label for="2-stars" class="star">★</label>
+                            <input type="radio" id="1-star" name="rate" value=1 v-model="ratings" />
+                            <label for="1-star" class="star">★</label>
+                        </div>
+
                         </div>      
-                        <div class="form-group">
-                            <input type="hidden" class="form-control" name='writer' >
-                        </div>
-                        <div class="form-group">
-                            <input class="form-control" name='insert_ts' value='current_date'>
-                        </div>
+                 
+                  </fieldset>
 
                     </div>
                     <div class="modal-footer">
-                      <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                      <button id='modalModBtn' type="button" class="btn btn-warning">수정</button>
-                      <button id='modalRemoveBtn' type="button" class="btn btn-danger">삭제</button>
                       <button id='modalRegisterBtn' type="button" class="btn btn-primary" data-bs-dismiss="modal">작성완료</button>
+                   
                     </div>
+                  
                   </div>
+                   
                 </div>
+               
               </div>
-
-            <!-- Modal -->
-            <div class="modal fade" id="reportmodal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel"><img src="/resources/img/siren.jpg" alt="" width="20px" height="20px"> 신고하기</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <label for="reportcode">신고유형</label>
-                            <select class="form-select" name="reportcode">
-                                <option value="1">욕설/비방</option>
-                                <option value="2">스포일러</option>
-                                <option value="3">광고</option>
-                                <option value="4">기타</option>
-                              </select>
-                              <br>
-                        </div>
-                        <div class="form-group">
-                            신고자 <input type="text" class="form-control" name="nickname" value="${__LOGIN__.nickname}" readonly>
-                            <input type="hidden" type="text" class="form-control" name='reportwriter' value="${__LOGIN__.userId}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="reportcontent">내용</label>
-                            <textarea name="rContent" class="form-control" cols="44" rows="10" placeholder="* 주의 *&#13;&#10;1. 허위신고 시 제재를 받을 수 있습니다.&#13;&#10;2. 신고는 취소할 수 없습니다."></textarea>
-                            
-                            <!-- <input id="reportcontent" class="form-control" name='reportcontent' value='내용을 입력하세요.'> -->
-                        </div>      
-                        <div class="form-group">
-                            <!-- 신고대상 -->
-                            <input type="hidden" type="text" class="form-control" name="reporttype" value="rno" readonly> 
-                            <input type="hidden" type="text" class="form-control" name="reporttarget" value="${ReviewFilmUserVO.film_id}" readonly>
-                            <input type="hidden" type="text" class="form-control" name="reporttarget" value="${ReviewFilmUserVO.rno}" readonly>
-                            <input type="hidden" type="text" class="form-control" name="suspect" value="${ReviewFilmUserVO.writer}" readonly>                       
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button id='modalCloseBtn' type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-                      <button id='modalReportBtn' type="button" class="btn btn-danger" data-bs-dismiss="modal">신고하기</button>
-                    </div> 
-                  </div>
-                </div>
-            </div>
-
-		</form>
+              
+	
   </body>
 </html>

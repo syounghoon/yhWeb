@@ -41,7 +41,7 @@
         })//jq
     </script>
 
-    <style>   
+    <style>   	
         #boardListWrapper{
             width: 998px;
             margin: 0 auto;
@@ -270,8 +270,8 @@
                                 </c:choose>
                             </td>
                             <td>${board.bno}</td>
-                            <td>${board.nickname}</td>
                             <td><a href="/board/get?bno=${board.bno}&currPage=${pageMaker.cri.currPage}&amount=${pageMaker.cri.amount}&pagesPerPage=${pageMaker.cri.pagesPerPage}">${board.title} </a> [<c:out value="${board.commentCnt}"/>]</td>
+                            <td>${board.nickname}</td>
                             <td><fmt:formatDate pattern="yyyy/MM/dd" value="${board.insert_ts}"/></td>
                             <td>${board.like_cnt}</td>
                             <td>${board.view_cnt}</td>

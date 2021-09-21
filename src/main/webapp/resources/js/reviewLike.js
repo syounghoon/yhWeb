@@ -7,7 +7,7 @@ var likeService = (
             console.log(userid+"회원 좋아요 >>"+rno);
             $.ajax({
                 type: 'post',
-                url: '/board/like/'+rno+'/'+userid,
+                url: 'film/review/like/'+rno+'/'+userid,
                 success: function(result,status,xhr){
                     if(callback);
                 },//success
@@ -20,12 +20,11 @@ var likeService = (
         }//newHeart
 
 
-
         function unLike(rno,userid,callback,error){
             console.log(userid+"회원 좋아요 취소 >>"+rno);
             $.ajax({
                 type: 'post',
-                url: '/board/unlike/'+rno+'/'+userid,
+                url: 'film/review/unlike/'+rno+'/'+userid,
                 success: function(result,status,xhr){
                     if(callback){
                         callback(result);
@@ -45,7 +44,7 @@ var likeService = (
                 // $.get("/board/get")
             $.ajax({
                 type:'post',
-                url:'/board/like/check/'+rno,
+                url:'film/review/like/check/'+rno,
                 success: function(result,status, xhr){
                     if(callback){
                         callback(result);
@@ -57,7 +56,7 @@ var likeService = (
                     }//if
                 }//error
             })//ajax
-        }//likeCehck
+        }//likeCheck
 
         return{
             likeIt: likeIt,

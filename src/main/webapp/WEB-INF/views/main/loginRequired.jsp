@@ -19,20 +19,20 @@
 	<script>
 		$(function(){
 			console.log("jq started");
-			$( document ).ready(function() {	//dom이 모두 준비되면
 				
-				$("#alert_modal p").text("로그인이 필요합니다.");
-				$("#alert_modal").modal("show");
-				var alertModalEl = document.getElementById('alert_modal');
-				alertModalEl.addEventListener('hidden.bs.modal', function(){
+			$("#alert_modal p").text("로그인이 필요합니다.");
+			$("#alert_modal").modal("show");
 			
-					$("#login").modal("show");
-					$("#login .btn-close").on('click', function(){
-						location.reload();
-						history.go(-1);
-					});
-				});//alertModal eventListener
-			});//document.ready
+			var alertModalEl = document.getElementById('alert_modal');
+			
+			alertModalEl.addEventListener('hidden.bs.modal', function(){	
+				$("#login").modal("show");
+				$("#login .btn-close").on('click', function(){
+					location.reload();
+					history.go(-1);
+				});//onclick login .btn-close
+			});//alertModal eventListener
+
 			$(window).unload(function(){
 				deleteCookie("__ORIGINAL_REQUEST_URI__");
 			});
@@ -44,28 +44,6 @@
 
 <body>
 	<%@include file="/resources/html/header.jsp" %>
-		<!-- <div style="margin : auto; width : 400px; height: 700px;">
-			<form id="login_required_form" method="POST">
-				<div class="mb-3">
-					<label for="login_email" class="form-label"><b>Email</b></label>
-					<input type="email" class="form-control" id="login_required_email" name="email" placeholder="name@example.com" autocomplete="username">
-				</div>
-				<div class="mb-3">
-					<label for="password" class="form-label"><b>Password</b></label><br>
-					<input type="password" class="form-control" id="login_required_password" name="password" placeholder="password" autocomplete="current-password">
-					<div><a href="/main/forgotPw" style="color: #C2DBFE ;">Forgot Password</a></div>
-				</div>
-				<div class="form-check">
-					<label class="form-check-label" for="rememberMe">Remember me</label>
-					<input class="form-check-input" type="checkbox" name="rememberMe" id="required_rememberMe">
-				</div>
-				<div class="d-grid gap-2">
-					<button type="button" class="btn btn-primary login_submit_btn">SIGN IN</button>
-				</div>
-			</form>
-		
-		</div>
-	<%@include file="/resources/html/footer.jsp" %> -->
 
 </body>
 

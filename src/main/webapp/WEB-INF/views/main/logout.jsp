@@ -17,9 +17,6 @@
 
 <body>
    <h1>WEB-INF/views/main/logout.jsp</h1>
-	
-	<hr>
-		없으면 오류나서 만들어둠. 실제로 여기로 이동하지는 않음
-	
+		
 </body>
 </html>

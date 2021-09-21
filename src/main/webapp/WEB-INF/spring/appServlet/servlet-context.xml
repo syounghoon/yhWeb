@@ -12,7 +12,6 @@
 
    <!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
    
-   <!-- Enables the Spring MVC @Controller programming model -->
    <annotation-driven />
 
    <!-- Handles HTTP GET requests for /resources/** 
@@ -24,13 +23,7 @@
       <beans:property name="prefix" value="/WEB-INF/views/" />
       <beans:property name="suffix" value=".jsp" />
    </beans:bean>
-   
-   <view-controller 
-      path="/main"
-      view-name="main/main"
-      status-code="200" 
-   />
-   
+     
    <view-controller 
       path="/main/loginRequired"
       view-name="main/loginRequired"
@@ -42,21 +35,32 @@
       view-name = "main/forgotPw"
       status-code = "200"
       />
-
-   <beans:bean
-      id="logInOutInterceptor"
-      class="com.filmee.myapp.interceptor.LogInOutInterceptor"
-      /> 
-                  
-   <beans:bean
-      id="authInterceptor"
-      class="com.filmee.myapp.interceptor.AuthInterceptor"
+   
+   <view-controller
+      path = "/forbidden"
+      view-name = "forbidden"
+      status-code = "200"
       />
 
-   <beans:bean
+   	<beans:bean
+      id="logInOutInterceptor"
+      class="com.filmus.myapp.interceptor.LogInOutInterceptor"
+      /> 
+                  
+	<beans:bean
+      id="authInterceptor"
+      class="com.filmus.myapp.interceptor.AuthInterceptor"
+      />
+
+	<beans:bean
       id="autoLoginInterceptor"
-      class="com.filmee.myapp.interceptor.AutoLoginInterceptor"
+      class="com.filmus.myapp.interceptor.AutoLoginInterceptor"
       />      
+	
+	<beans:bean
+	  id="adminInterceptor"
+	  class="com.filmus.myapp.interceptor.AdminInterceptor"
+	  />
 
    <interceptors>
       <interceptor>
@@ -96,12 +100,17 @@
          <beans:ref bean="autoLoginInterceptor" />
       </interceptor>
       
+      <interceptor>
+      	<mapping path="/admin/**" />
+      	
+      	<beans:ref bean="adminInterceptor" />
+      </interceptor>
+      
    </interceptors>
-
-
-   <context:component-scan base-package="com.filmee.myapp.controller" />
-   <context:component-scan base-package="com.filmee.myapp.interceptor" />
-   <context:component-scan base-package="com.filmee.myapp.exception" />
    
+ 
+   <context:component-scan base-package="com.filmus.myapp.controller" />
+   <context:component-scan base-package="com.filmus.myapp.interceptor" />
+   <context:component-scan base-package="com.filmus.myapp.exception" />
 
 </beans:beans>

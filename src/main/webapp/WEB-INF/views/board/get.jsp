@@ -138,7 +138,7 @@
                     writer:"${__LOGIN__.userId}"
                 };
                 replyService.add(reply,function(result){
-                    alert(result); 
+                    alert("댓글을 작성했습니다."); 
                     modal.find("input").val("");
                     modal.modal("hide");
                     showList(1);
