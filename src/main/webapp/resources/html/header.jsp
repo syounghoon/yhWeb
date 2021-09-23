@@ -46,6 +46,11 @@
                   $(".strangerHeadermenu").attr("style", "display:none");
                   $(".memberHeadermenu").attr("style", "display:inline");
                   $(".memberHeadermenu").attr("style", "font-size:19px");
+                  $(".memberHeadermenu").attr("style", "font-weight:bold");
+                  $("#register_review_btn").attr("style", "display:inline-block");
+                  
+                }//if
+
 
                   $(".memberHeadermenu").attr("style", "color:black");
                 $(".memberHeadermenu").attr("style", "font-weight:bold");
@@ -187,7 +192,6 @@
 			    font-size: 20px;
 			    font-family: 'ELAND 초이스'; 
 			   
-			    	    
 			}
 			
 			a {
