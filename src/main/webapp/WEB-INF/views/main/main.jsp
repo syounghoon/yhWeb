@@ -12,7 +12,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
-	<title>FILMEE | FILM MEETING</title>
+	<title>FILMUS</title>
 	<link rel="icon" href="/resources/img/favicon_noback.ico"
 		type="image/x-icon">
 	
@@ -83,7 +83,7 @@
 				
 				console.log('#filmPoster'+vs);
 				console.log('#posterHover'+vs);
-			
+
 			  $('#filmPoster'+vs).hover(function(){
 				 	console.log('#filmPoster'+vs);
 					console.log('#posterHover'+vs);
@@ -193,8 +193,7 @@
 			}//switch-case
 	
 			$('#header_search')
-					.on(
-							'propertychange change keyup paste input',
+					.on('propertychange change keyup paste input',
 							function() {
 								var selected = $('#header_select').val();
 								if (selected == 1) {
@@ -202,8 +201,7 @@
 									var filmTitleComplete = {
 										filmTitle : filmTitle
 									};
-									$
-											.ajax({
+									$.ajax({
 												url : '/search/searchFilmAutoComplete',
 												type : 'post',
 												data : filmTitleComplete,
@@ -247,8 +245,7 @@
 									var nicknameComplete = {
 										nickname : nickname
 									};
-									$
-											.ajax({
+									$.ajax({
 												url : '/search/searchUserAutoComplete',
 												type : 'post',
 												data : nicknameComplete,
@@ -488,6 +485,20 @@
 		.wrong_info {
 			background-color: #f0adce96;
 		}
+		
+		
+		
+		video#bgvid {
+            position: fixed; 
+            right: 0; 
+            bottom: 0;
+            min-width: 100%; 
+            min-height: 100%;
+            width: auto; 
+            height: auto; 
+            z-index: -100;
+            background-size: cover;
+        }
 	</style>
 	
 	</head>
@@ -501,14 +512,14 @@
 			<nav class="navbar navbar-expand-lg">
 				<div class="container-fluid">
 					<a class="navbar-brand" href="/"><img id='header_nav_logo'
-						src='/resources/img/filmeeLogo.png'></a>
+						src='/resources/img/filmusLogo.gif'></a>
 					<button class="navbar-toggler" type="button"
 						data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 						aria-controls="navbarSupportedContent" aria-expanded="false"
 						aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
-					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-top: 50px;">
 						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 							<li class="nav-item"><a class="nav-link strangerHeadermenu"
 								data-bs-toggle="modal" data-bs-target="#login"
@@ -552,11 +563,21 @@
 			</nav>
 		</div>
 
-		<iframe width="100%" height="813"
+		<!-- <iframe width="100%" height="813"
 			src="https://www.youtube.com/embed/Ko2NWhXI9e8?autoplay=1&mute=1"
 			title="YouTube video player" frameborder="0"
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-			allowfullscreen></iframe>
+			allowfullscreen></iframe> -->
+			
+			<!-- <iframe width="100%" height="813"
+			src="resources/video/avengers_endgame_trailer.mp4"
+			frameborder="0"
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+			allowfullscreen muted autoplay></iframe> -->
+			
+		<video muted autoplay loop id="bgvid">
+        	<source src="resources/video/avengers_endgame_trailer.mp4" type="video/mp4">
+    	</video>
 
 	</div>
 

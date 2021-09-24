@@ -12,7 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <title>FILMEE | FILM MEETING</title>
+    <title>FILMUS</title>
     <link rel="icon" href="/resources/img/favicon_noback.ico" type="image/x-icon">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
@@ -788,6 +788,7 @@
                 <div class="modal-body">
                     <form action="/mypage/newPassword" method="POST">
                         <input type="hidden" name="email" value="${__LOGIN__.email}">
+                        <input type="hidden" name="userid" value="${__LOGIN__.userId}">
                         <div class="mb-3">
                             <label for="current_pw" class="form-label"><b>Current Password</b></label>
                             <input type="password" class="form-control" id="current_pw" placeholder="현재 비밀번호" oninput="javascript:checkCurrentPw()" autocomplete="current-password">

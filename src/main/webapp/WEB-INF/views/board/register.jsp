@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FILMEE | FILM MEETING</title>
+    <title>FILMUS</title>
     <link rel="icon" href="/resources/img/favicon_noback.ico" type="image/x-icon">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -91,7 +91,8 @@
             <input type="hidden" name="amount" value="${cri.amount}">
             <input type="hidden" name="pagesPerPage" value="${cri.pagesPerPage}">
             <input type="hidden" name="writer" value="${__LOGIN__.userId}">
-            <input type="hidden" name="files">
+            
+            <input type="hidden" name="file">
             <div>
                 <table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
                     <thead>
@@ -117,7 +118,7 @@
                             <td><textarea id="content"  class="form-control" placeholder="글 내용" name="content" maxlength="2048" style="height: 350px;"></textarea></td>
                         </tr>
                         <tr>
-                            <td><input type="file" class="form-control" name="files" multiple></td>
+                            <td><input type="file" class="form-control" name="file"></td>
                         </tr>
                     </tbody>
                 </table>             

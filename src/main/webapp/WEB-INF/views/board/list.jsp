@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FILMEE | FILM MEETING</title>
+    <title>FILMUS</title>
     <link rel="icon" href="/resources/img/favicon_noback.ico" type="image/x-icon">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -21,6 +21,7 @@
             console.log("jq started");
             $('#regBtn').click(function(){
                 console.log("regBtn clicked !!");
+               
                 location.href="/board/register?currPage=${cri.currPage}&amount=${cri.amount}&pagesPerPage=${cri.pagesPerPage}";//cri를 사용하기위해 controller에서 ModelAttribute하였음
             })//.click
             $('a.prev,a.next').on('click', function(e){
@@ -282,10 +283,10 @@
         </table>
 
         <p>&nbsp;</p>
-        <div>
+        <div>        	
             <c:if test="${__LOGIN__!=null}">
                 <button id="regBtn" class="btn btn-outline-dark" type="button">글쓰기</button>
-            </c:if>
+            </c:if>            
         </div>
 
         <div id="pagination">
