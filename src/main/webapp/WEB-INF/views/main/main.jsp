@@ -281,7 +281,7 @@
 																.append(
 																		"<a href='/mypage/main?userid="
 																				+ listUser[i].userid
-																				+ "' id='searchTitle' style='float: left;'>"
+																				+ "' id='searchTitle' style='float: left; color:black !important;'>"
 																				+ listUser[i].nickname
 																				+ "</a>");
 													} //for
@@ -332,7 +332,7 @@
 	<style>
 		#mainback {
 			width: 100%;
-			height: 813px;
+			height: 900px;
 			overflow: hidden;
 			margin: 0px auto;
 			position: relative;
@@ -436,6 +436,7 @@
 		}
 		
 		}
+		
 		#header {
 			width: 998px;
 			height: 150px;
@@ -444,6 +445,7 @@
 			font-family: 'ELAND 초이스';
 			position: absolute;
 			left: 20%;
+			z-index: 10;
 		}
 		
 		#header a {
@@ -457,7 +459,7 @@
 		
 		#autocomplete_result_list {
 			position: absolute;
-			top: 90px;
+			top: 110px;
 			right: 100px;
 			width: 300px;
 			list-style: none;
@@ -486,18 +488,8 @@
 			background-color: #f0adce96;
 		}
 		
-		
-		
-		video#bgvid {
-            position: fixed; 
-            right: 0; 
-            bottom: 0;
-            min-width: 100%; 
-            min-height: 100%;
-            width: auto; 
-            height: auto; 
-            z-index: -100;
-            background-size: cover;
+		video#bgvid {           
+            z-index: -100;          
         }
 	</style>
 	
@@ -563,27 +555,19 @@
 			</nav>
 		</div>
 
-		<!-- <iframe width="100%" height="813"
-			src="https://www.youtube.com/embed/Ko2NWhXI9e8?autoplay=1&mute=1"
-			title="YouTube video player" frameborder="0"
-			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-			allowfullscreen></iframe> -->
-			
-			<!-- <iframe width="100%" height="813"
+		<video muted autoplay loop id="bgvid" style="width:100%;" >
+        	<source src="resources/video/avengers_endgame_trailer.mp4" type="video/mp4">
+    	</video>
+    	
+    	<!-- <iframe width="100%" height="813"
 			src="resources/video/avengers_endgame_trailer.mp4"
 			frameborder="0"
 			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
 			allowfullscreen muted autoplay></iframe> -->
-			
-		<video muted autoplay loop id="bgvid">
-        	<source src="resources/video/avengers_endgame_trailer.mp4" type="video/mp4">
-    	</video>
 
 	</div>
 
 	<div id="container">
-
-
 
 		<div id="mainText">
 			<p>
@@ -650,7 +634,6 @@
 							</div>
 						</div>
 
-
 						<h6>${reviews.rate}/ 5.0</h6>
 
 						<div class='row' style='margin-top: 5px;'>
@@ -680,8 +663,6 @@
 
 						</div>
 
-
-
 					</div>
 
 				</div>
@@ -691,7 +672,6 @@
 			</c:forEach>
 
 		</div>
-
 
 	</div>
 	<!-- alert Modal -->

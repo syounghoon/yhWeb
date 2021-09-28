@@ -1,4 +1,4 @@
-package com.filmus.myapp.service;
+package com.filmus.myapp.mapper;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -23,42 +23,28 @@ import lombok.extern.log4j.Log4j2;
 		"file:src/main/webapp/WEB-INF/spring/root-context.xml",
 		"file:src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml"
 })
-public class FilmServiceTests {
-
-	@Autowired
-	private FilmService service;
+public class ReviewMapperTests {
+	
+	@Autowired private ReviewMapper mapper;
 	
 	@Before
 	public void setup() {
 		log.debug("setup() invoked.");
 		
-		assertNotNull(this.service);
-	}
+		assertNotNull(this.mapper);
+	}//setup
 	
 	@Test
-	public void testShowFilmInfo() {
-		log.debug("testShowFilmInfo() invoked.");
+	public void testReviewDetail() {
+		log.debug("testReviewDetail() invoked.");
 		
-		this.service.showFilmInfo("299534");
-	}
-	
-	@Test
-	public void testGetFilmReactionOfUser() {
-		log.debug("testGetFilmReactionOfUser() invoked.");
-		
-		this.service.getFilmReactionOfUser("146", "299534");
-	}
-	
-	@Test
-	public void testGetFilmReactionOfThis() {
-		log.debug("testGetFilmReactionOfThis() invoked.");
-		
-		this.service.getFilmReactionOfThis("299534");
-	}
+		this.mapper.reviewDetail(63, 299534);
+	}//testReviewDetail
 	
 	@After
 	public void tearDown() {
 		log.debug("tearDown() invoked.");
-	}
+	}//tearDown
 	
+
 }//end class

@@ -387,9 +387,20 @@
 		.activity_a {
 			color: blue !important;
 			font-weight: bold;
+			
 		}
 		
 		#activity_review_content_a {
+			display: inline-block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			width: 150px;
+			color: blue;
+			font-weight: bold;
+		}
+		
+		#activity_review_content_b {
 			display: inline-block;
 			white-space: nowrap;
 			overflow: hidden;
@@ -411,6 +422,8 @@
 			margin-left: 500px;
 			margin-top: 20px;
 		}
+		
+		
 	</style>
 	
 </head>
@@ -482,15 +495,15 @@
    
                 <div id='follower_count'>
                     <ul>
-                        <li><a href='/mypage/follower?userid=${cri.userid}&currPage=1&amount=10&pagesPerPage=5' style='color: black;'>Follower</a></li>
-                        <li><a href='/mypage/follower?userid=${cri.userid}&currPage=1&amount=10&pagesPerPage=5' style='color: black;'>${followees}</a></li>
+                        <li><a href='/mypage/followee?userid=${cri.userid}&currPage=1&amount=10&pagesPerPage=5' style='color: black;'>Follower</a></li>
+                        <li><a href='/mypage/followee?userid=${cri.userid}&currPage=1&amount=10&pagesPerPage=5' style='color: black;'>${followees}</a></li>
                     </ul>
                 </div>
 
                 <div id='following_count'>
                     <ul>
-                        <li><a href='/mypage/followee?userid=${cri.userid}&currPage=1&amount=10&pagesPerPage=5' style='color: black;'>Following</a></li>
-                        <li><a href='/mypage/followee?userid=${cri.userid}&currPage=1&amount=10&pagesPerPage=5' style='color: black;'>${followers}</a></li>
+                        <li><a href='/mypage/follower?userid=${cri.userid}&currPage=1&amount=10&pagesPerPage=5' style='color: black;'>Following</a></li>
+                        <li><a href='/mypage/follower?userid=${cri.userid}&currPage=1&amount=10&pagesPerPage=5' style='color: black;'>${followers}</a></li>
                     </ul>
                 </div>
 
@@ -684,7 +697,7 @@
                        
                        <hr>
    
-                  <table class="table table-striped table-hover">               
+                  <table class="table table-striped table-hover" id='mypage_main_activity_table'>               
                      <thead>
                         <tr>
                            <th>Content</th>
@@ -718,7 +731,7 @@
                                   <c:when test="${type eq 'RL'}">
                                       <td>
                                          <a class='activity_a' href='/mypage/main?userid=${activityVO.userid}'>${activityVO.nickname}</a>님이                                      
-                                         <a class='activity_a' href='/film/${activityVO.reviewFilmId}/review/${activityVO.rno}' id='activity_review_content'>${activityVO.content}</a> 리뷰를 좋아합니다.                                      
+                                         <a class='activity_a' href='/film/${activityVO.reviewFilmId}/review/${activityVO.rno}' id='activity_review_content_b'>${activityVO.content}</a> 리뷰를 좋아합니다.                                      
                                       </td>
                                       <td>${activityVO.insertTs}</td>
                                   </c:when>
@@ -864,8 +877,9 @@
              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
              </div>
              <div class="modal-body">
-                 <h5>삭제된 계정은 복구가 불가능하며, 회원님이 작성하신 게시물과 영화 리뷰를 제외한 모든 정보는 탈퇴 즉시 삭제됩니다.
-                 <strong>탈퇴 하시겠습니까?</strong></h5>
+                 <h5>삭제된 계정은 복구가 불가능하며, 회원님이 작성하신 게시물과 영화 리뷰를 제외한 모든 정보는 탈퇴 즉시 삭제됩니다.</h5>
+                 <br>
+                 <h3><strong>탈퇴 하시겠습니까?</strong></h3>
                  <p>&nbsp;</p>
 
                  <form action="/main/deleteAccount" id="del_acc_form" method="POST">
