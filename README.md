@@ -89,7 +89,7 @@ ___
 <summary><b>Show</b></summary>
 <div markdown="1">
 
-![serachResult](https://younghoon.s3.ap-northeast-2.amazonaws.com/Filmus/FilmusSearchResult.png)
+![searchResult](https://younghoon.s3.ap-northeast-2.amazonaws.com/Filmus/FilmusSearchResult.png)
 
 
 </div>
