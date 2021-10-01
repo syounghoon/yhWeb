@@ -26,8 +26,8 @@
     <link rel="stylesheet" href="/resources/css/layout.css">
     <link rel="stylesheet" href="/resources/css/swiper.css">
     
-    <script src="../resources/js/jquery-1.8.3.min.js"></script>
-    <script src="../resources/js/swiper.js"></script>
+    <script src="/resources/js/jquery-1.8.3.min.js"></script>
+    <script src="/resources/js/swiper.js"></script>
 
     <script>
         window.onload = function(){
@@ -132,7 +132,7 @@
                         // $(".new_pw_submit_btn").prop("disabled", true);
                     } else if (data == 1) {
                         isCurrentPwChecked = true;
-                        $("#current_pw_message").text("✅☑✔👌🙆🏻‍♂🙆🏻‍♀🙆‍♀");
+                        $("#current_pw_message").text("✅✔👌🙆🏻‍♂🙆🏻‍♀🙆‍♀");
                         // $(".new_pw_submit_btn").prop("disabled", false);
                     }//if-elseif-elseif-elseif
                     isChangeBtnValid();
@@ -154,7 +154,7 @@
                 // $("#new_pw_input").css("background-color", "#FFCECE");
             }else{
                 isNewPwValid = true;
-                $("#new_pw_message").text("✅☑✔👌🙆🏻‍♂🙆🏻‍♀🙆‍♀");
+                $("#new_pw_message").text("✅✔👌🙆🏻‍♂🙆🏻‍♀🙆‍♀");
                 // $("#new_pw_input").css("background-color", "#C2DBFE");
             }//if-elseif-else
             if(confirmPw.length == 0){
@@ -169,7 +169,7 @@
                 // $("#confirm_pw_input").css("background-color", "#FFCECE");
             } else{
                 isNewPwConfirmed = true;
-                $("#confirm_pw_message").text("✅☑✔👌🙆🏻‍♂🙆🏻‍♀🙆‍♀");
+                $("#confirm_pw_message").text("✅✔👌🙆🏻‍♂🙆🏻‍♀🙆‍♀");
                 // $(".new_pw_submit_btn").prop("disabled", false);
                 // $("#confirm_pw_input").css("background-color", "#C2DBFE");
             }//if- elseif -else
@@ -257,6 +257,7 @@
 		
 		#userProfileRegBtn {
 			margin-top: 15px;
+			margin-left: 53px;
 		}
 		
 		#mypage_usable-statistics {
@@ -437,7 +438,7 @@
         <div id='mypage_info'>
 
             <div id='mypage_profile'>
-                <h1 class="display-6">PROFILE</h1>            
+                <h1 class="display-6">${userVO.nickname}'s PROFILE</h1>            
                 
                 <hr>
                 
@@ -451,9 +452,17 @@
 
             <c:set var='userid' value='${cri.userid}' />
             <c:set var='sessionUserid' value='${__LOGIN__.userId}' />
-            <c:set var='isFollowed' value='#{isFollowed}' />
-                <button type="button" id='userRegBtn' class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#new_pw" style="${sessionUserid eq userid ? 'display:inline' : 'display:none'}">Register</button>
-                <button type="button" id='userProfileRegBtn' class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#registerProfile" style="${sessionUserid eq userid ? 'display:inline' : 'display:none'}">RegisterProfile</button>
+            <c:set var='social' value='${userVO.social}' />
+            <c:set var='isFollowed' value='${isFollowed}' />
+            <c:choose>
+            	<c:when test="${social eq 'SOC.KAKAO_'}">
+            		<button type="button" id='userRegBtn' class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#new_pw" style='display:none'>Password</button>               
+            	</c:when>
+            	<c:otherwise>
+            		<button type="button" id='userRegBtn' class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#new_pw" style="${sessionUserid eq userid ? 'display:inline' : 'display:none'}">Password</button>               
+            	</c:otherwise>
+            </c:choose>
+                <button type="button" id='userProfileRegBtn' class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#registerProfile" style="${sessionUserid eq userid ? 'display:inline' : 'display:none'}">Profile</button>
                 
               <c:choose>
                  <c:when test="${isFollowed eq '0'}">
@@ -530,7 +539,7 @@
             
             <div class="inWrap">            
 
-                <h1 class="display-6">Favorite Films</h1>
+                <h1 class="display-6">My Favorite Films</h1>
 
             <hr>         
                 
