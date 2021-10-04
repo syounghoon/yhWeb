@@ -53,6 +53,7 @@ ___
  - log4jdbc(Driver Spy)
  - AWS S3
  - Jackson-databind
+ - JUnit4
 
 -------------------------------
 
