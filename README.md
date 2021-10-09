@@ -2,12 +2,13 @@
 
 ## ■ Info
 
-- #### EC2 연결 [**연결**](http://52.79.71.243:8090/)
-- #### 전체 포트폴리오 [**보기**](https://younghoon.s3.ap-northeast-2.amazonaws.com/Filmus/portpolio.pdf)
+- #### EC2 [**연결**](http://52.79.71.243:8090/)
+- #### 개인 포트폴리오 [**보기**](https://younghoon.s3.ap-northeast-2.amazonaws.com/Filmus/portfolioYh.pdf)
+- #### 팀 포트폴리오 [**보기**](https://younghoon.s3.ap-northeast-2.amazonaws.com/Filmus/portfolioTeam.pdf)
 
 
 #### My Part
- - AWS EC2 기반으로 프로젝트 구현
+ - AWS EC2 활용하여 배포
  - AWS S3 사용하여 파일 업로드 다운로드 구현
  - 메인
  - 영화/유저 검색
@@ -35,7 +36,7 @@ ___
  - spring framework
  - oracle cloud
  - myBatis
- - Maven
+ - Apache Maven
  - Apache Tomcat 9
 
 #### Front-end 
